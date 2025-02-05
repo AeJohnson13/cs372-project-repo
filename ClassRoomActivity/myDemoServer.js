@@ -42,13 +42,14 @@ app.post("/add-user", async (req, res) => {
     try {
         const mydatabase = client.db("myDemoDb");
         const mycollection = mydatabase.collection("myDemoCollection");
+	const key = "EnteredName";
 
         const { userName } = req.body;
         if (!userName) {
             return res.status(400).json({ error: "Username is required" });
         }
 
-        const doc = { userName };
+        const doc = { key, userName };
         const result = await mycollection.insertOne(doc);
 
         res.json({ message: "User added", id: result.insertedId });
