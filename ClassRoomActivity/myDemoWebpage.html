@@ -24,6 +24,9 @@ for CS372 Classroom Activty Demo
 			<button type = "button" onclick = "submitData()"> Submit </button> 
 			<button type = "button" onclick = "displayData()"> Display </button> 
 		</form>
+
+		<h2>Users List:</h2>
+    		<ul id="usersList"></ul>
 		
 		<script>
         		async function submitData() {
@@ -38,7 +41,22 @@ for CS372 Classroom Activty Demo
             			const data = await response.json();
             			alert(data.message || data.error);
         		}
+
+			async function displayData() {
+            			const response = await fetch("http://localhost:6543/get-users");
+            			const users = await response.json();
+
+            			const usersList = document.getElementById("usersList");
+            			usersList.innerHTML = ""; // Clear previous entries
+
+            			users.forEach(user => {
+                			const li = document.createElement("li");
+                			li.textContent = user.userName;
+                			usersList.appendChild(li);
+            			});
+        		}
     		</script>
+		
 	</body> 
 
 

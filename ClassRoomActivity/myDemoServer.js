@@ -37,7 +37,7 @@ async function connectDB() {
 }
 connectDB();
 
-// API Route
+// API Route: Add User
 app.post("/add-user", async (req, res) => {
     try {
         const mydatabase = client.db("myDemoDb");
@@ -52,6 +52,19 @@ app.post("/add-user", async (req, res) => {
         const result = await mycollection.insertOne(doc);
 
         res.json({ message: "User added", id: result.insertedId });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// API Route: Get Users
+app.get("/get-users", async (req, res) => {
+    try {
+        const mydatabase = client.db("myDemoDb");
+        const mycollection = mydatabase.collection("myDemoCollection");
+
+        const users = await mycollection.find().toArray();
+        res.json(users);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
