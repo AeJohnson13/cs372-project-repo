@@ -21,9 +21,24 @@ for CS372 Classroom Activty Demo
 
 		<form> 
 			Username <input type = "text", id = "UserNameInput"> </input>
-			<button type = "button"> Submit </button> 
-			<button type = "button"> Display </button> 
+			<button type = "button" onclick = "submitData()"> Submit </button> 
+			<button type = "button" onclick = "displayData()"> Display </button> 
 		</form>
+		
+		<script>
+        		async function submitData() {
+            			const userName = document.getElementById("UserNameInput").value;
+
+            			const response = await fetch("http://localhost:6543/add-user", {
+                			method: "POST",
+                			headers: { "Content-Type": "application/json" },
+                			body: JSON.stringify({ userName })
+            			});
+
+            			const data = await response.json();
+            			alert(data.message || data.error);
+        		}
+    		</script>
 	</body> 
 
 
