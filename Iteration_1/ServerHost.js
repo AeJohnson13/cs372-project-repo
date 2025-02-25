@@ -1,4 +1,10 @@
-// Import Express
+// ServerHost.js
+// Alex Johnson, Enica King, Ryland Scaker
+// Server Hosting for LoginWebpage.html
+
+
+
+
 const express = require('express');
 const { MongoClient } = require("mongodb");
 const crypto = require('node:crypto');
@@ -45,35 +51,6 @@ async function sha256Hash(password){
 
 
 // API Route: Add User
-app.post("/add-user", async (req, res) => {
-    try {
-        const mydatabase = client.db("SC-Project");
-        const mycollection = mydatabase.collection("User Credentials");
-		const { userName } = req.body;
-		const passWord  = req.body.passWord; 
-
-        if (!userName) {
-            return res.status(400).json({ error: "Username is required" });
-        }
-		if (!passWord) {
-			return res.status(400).json({ error: "Password is required" });
-		} 
-		
-		
-		const pwdHash = await sha256Hash(passWord);
-		console.log(pwdHash);
-        const doc = {userName, "pwdHash":pwdHash};
-		
-        const result = await mycollection.insertOne(doc);
-		
-
-        res.json({ message: "User added", id: result.insertedId });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-
 app.post("/verify-user", async (req, res) => {
     try {
         const mydatabase = client.db("SC-Project");
@@ -90,10 +67,43 @@ app.post("/verify-user", async (req, res) => {
 		
 		
 		const pwdHash = await sha256Hash(passWord);
-		console.log(pwdHash);
         const doc = {userName, "pwdHash":pwdHash};
 		
+        const result = await mycollection.findOne(doc);
+        if(result){
+            res.json({mesage: "Login Successful"});
+        }
+        else{
+            res.json({ message: "Login Failed"});
+        }
+	
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
+
+app.post("/add-user", async (req, res) => {
+    try {
+        const mydatabase = client.db("SC-Project");
+        const mycollection = mydatabase.collection("User Credentials");
+		const { userName } = req.body;
+		const passWord  = req.body.passWord; 
+
+        if (!userName) {
+            return res.status(400).json({ error: "Username is required" });
+        }
+		if (!passWord) {
+			return res.status(400).json({ error: "Password is required" });
+		} 
+		
+		
+		const pwdHash = await sha256Hash(passWord);
+        const doc = {userName, "pwdHash":pwdHash};
+
+
+        const result = await mycollection.insertOne(doc);
+		if(mycollection)
         res.json({ message: "User added", id: result.insertedId });
     } catch (error) {
         res.status(500).json({ error: error.message });

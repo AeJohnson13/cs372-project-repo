@@ -3,7 +3,7 @@
 // Scripts for LoginWebpage.html
 
 
-async function verfiyData() { 
+async function verifyData() { 
 	const userName = document.getElementById("UserNameInput").value;
 	const passWord = document.getElementById("PasswordInput").value;
 	const response = await fetch("http://localhost:6543/verify-user", {
@@ -14,15 +14,14 @@ async function verfiyData() {
 
 	
 	const data = await response.json();
+	if(data.message = "Login Successful")
+	{
+		window.location.href = "Gallery.html";
+	}
+
     alert(data.message || data.error);
+
 }
-
-
-
-
-
-
-
 
 
 
