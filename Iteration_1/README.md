@@ -1,11 +1,19 @@
 # Directory for the first iteration #
 
+## required user stories
+- [x] create user frontend
+- [x] send user to gallery page on succesful login
+- [x] setup mongodb database to store user credentials
+- [x] store passwords using sha256 encoding 
+
 ## demo users ##
-- Username 1: demoemail@email.com     
-- Password 1: 12345678
+| Usernames            | Passwords  |
+|----------------------|------------|
+| demoemail@email.com  | 12345678   |
+|----------------------|------------|
+| freevbuck@epic.store | GtR34$deez |
+|----------------------|------------|
+|       username       |  password  | 
+|----------------------|------------|
 
-- Username 2: freevbuck@epic.store    
-- Password 2: GtR34$deez
 
-- Username 3: username                
-- Password 3: password
