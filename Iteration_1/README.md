@@ -1,10 +1,11 @@
 # Directory for the first iteration #
 
 ## demo users ##
-- Username: demoemail@email.com     Password: 12345678
+- Username 1: demoemail@email.com     
+- Password 1: 12345678
 
-- Username: freevbuck@epic.store    Password: GtR34$deez
+- Username 2: freevbuck@epic.store    
+- Password 2: GtR34$deez
 
-- Username: username                Password: password
-    
-s
+- Username 3: username                
+- Password 3: password
