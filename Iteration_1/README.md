@@ -8,12 +8,8 @@
 
 ## demo users ##
 | Usernames            | Passwords  |
-|----------------------|------------|
 | demoemail@email.com  | 12345678   |
-|----------------------|------------|
 | freevbuck@epic.store | GtR34$deez |
-|----------------------|------------|
 |       username       |  password  | 
-|----------------------|------------|
 
 
