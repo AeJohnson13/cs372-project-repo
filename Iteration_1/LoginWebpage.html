@@ -12,7 +12,7 @@ for CS372 Project 1
 		</title> 
 	</head>
 
-	<body onkeyup = "checkUserName()" >
+	<body>
 		<header>
 			<h1> 
 				Login  
@@ -21,19 +21,16 @@ for CS372 Project 1
 
 		<form> 
 			Username <input type = "text", id = "UserNameInput"> </input>
-      <br> 
-		  Password <input type = "password", id = "PasswordInput"> </input> 
-      <button type = "button" onclick = "submitData()"> Submit </button> 
+			<br> 
+			Password <input type = "password", id = "PasswordInput"> </input> 
+			<button type = "button" onclick = "submitData()"> Submit </button> 
 		</form>
 
 		<h2>Users List:</h2>
     		<ul id="usersList"></ul>
 		
-		<script> // put this in a js file  //resolved
-    </script>
+		<script src="ScriptsLoginPage.js" type="text/javascript">  </script>
 		
 	</body> 
-
-
 
 </html> 
