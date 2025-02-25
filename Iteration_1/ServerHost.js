@@ -74,6 +74,31 @@ app.post("/add-user", async (req, res) => {
 });
 
 
+app.post("/verify-user", async (req, res) => {
+    try {
+        const mydatabase = client.db("SC-Project");
+        const mycollection = mydatabase.collection("User Credentials");
+		const { userName } = req.body;
+		const passWord  = req.body.passWord; 
+
+        if (!userName) {
+            return res.status(400).json({ error: "Username is required" });
+        }
+		if (!passWord) {
+			return res.status(400).json({ error: "Password is required" });
+		} 
+		
+		
+		const pwdHash = await sha256Hash(passWord);
+		console.log(pwdHash);
+        const doc = {userName, "pwdHash":pwdHash};
+		
+
+        res.json({ message: "User added", id: result.insertedId });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 
 
