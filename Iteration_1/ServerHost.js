@@ -1,4 +1,4 @@
-// ServerHost.js
+// serverHost.js
 // Alex Johnson, Enica King, Ryland Scaker
 // Server Hosting for LoginWebpage.html
 

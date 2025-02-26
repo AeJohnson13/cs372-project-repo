@@ -1,4 +1,4 @@
-// ScriptsLoginPage.js
+// scriptsLoginPage.js
 // Alex Johnson, Ryland Scaker, Enica King
 // Scripts for LoginWebpage.html
 
