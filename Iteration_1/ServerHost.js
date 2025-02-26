@@ -21,7 +21,7 @@ app.use(express.static(__dirname, { // host the whole directory
 
 // Define a route
 app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/LoginWebpage.html')
+	res.sendFile(__dirname + '/loginPage.html')
 });
 
 // Start the server

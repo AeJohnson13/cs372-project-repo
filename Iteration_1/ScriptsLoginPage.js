@@ -16,7 +16,7 @@ async function verifyData() {
 	const data = await response.json();
 	if(data.message == "Login Successful")
 	{
-		window.location.href = "Gallery.html";
+		window.location.href = "galleryPage.html";
 	}
 
     alert(data.message || data.error);
