@@ -55,7 +55,7 @@ app.post("/verify-user", async (req, res) => {
     try {
         const mydatabase = client.db("SC-Project");
         const mycollection = mydatabase.collection("User Credentials");
-		const { userName } = req.body;
+        const { userName } = req.body;
 		const passWord  = req.body.passWord; 
 
         if (!userName) {
@@ -71,7 +71,7 @@ app.post("/verify-user", async (req, res) => {
 		
         const result = await mycollection.findOne(doc);
         if(result){
-            res.json({mesage: "Login Successful"});
+            res.json({message: "Login Successful"});
         }
         else{
             res.json({ message: "Login Failed"});

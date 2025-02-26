@@ -14,13 +14,12 @@ async function verifyData() {
 
 	
 	const data = await response.json();
-	if(data.message = "Login Successful")
+	if(data.message == "Login Successful")
 	{
 		window.location.href = "Gallery.html";
 	}
 
     alert(data.message || data.error);
-
 }
 
 
