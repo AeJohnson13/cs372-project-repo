@@ -4,6 +4,7 @@
 
 
 
+
 // verifyData() 
 // 		reads username and password from input objects
 //		sends credentials to server, if login is successful sends user 
@@ -29,7 +30,7 @@ async function verifyData() {
 
 
 
-// submitDat() 
+// submitData() 
 //		reads username and password from input object
 //		sends credentials to server, and adds them to database collection
 async function submitData() {
