@@ -1,15 +1,20 @@
 // scriptsLoginPage.js
 // Alex Johnson, Ryland Scaker, Enica King
-// Scripts for LoginWebpage.html
+// Scripts for loginPage.html
 
 
+
+// verifyData() 
+// 		reads username and password from input objects
+//		sends credentials to server, if login is successful sends user 
+//		to the gallery page
 async function verifyData() { 
-	const userName = document.getElementById("UserNameInput").value;
-	const passWord = document.getElementById("PasswordInput").value;
-	const response = await fetch("http://localhost:6543/verify-user", {
+	const username = document.getElementById("usernameInput").value;
+	const password = document.getElementById("passwordInput").value;
+	const response = await fetch("http://localhost:6543/verifyUser", {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ userName, passWord })
+		body: JSON.stringify({ username, password })
 	});
 
 	
@@ -24,14 +29,16 @@ async function verifyData() {
 
 
 
-
+// submitDat() 
+//		reads username and password from input object
+//		sends credentials to server, and adds them to database collection
 async function submitData() {
-	const userName = document.getElementById("UserNameInput").value;
-	const passWord = document.getElementById("PasswordInput").value;
-	const response = await fetch("http://localhost:6543/add-user", {
+	const username = document.getElementById("usernameInput").value;
+	const password = document.getElementById("passwordInput").value;
+	const response = await fetch("http://localhost:6543/addUser", {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ userName, passWord })
+		body: JSON.stringify({ username, password })
 	});
 
 	const data = await response.json();

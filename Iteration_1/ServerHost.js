@@ -1,6 +1,6 @@
 // serverHost.js
 // Alex Johnson, Enica King, Ryland Scaker
-// Server Hosting for LoginWebpage.html
+// serverside code for cs372 Project
 
 
 
@@ -30,8 +30,10 @@ app.listen(port, () => {
 });
 
 
-
-async function connectDB() {
+// connectDatabse()
+//      Will wait until connection to database is verified, 
+//      prints error message if connections fails
+async function connectDatabase() {
     try {
         await client.connect();
         console.log("Connected to MongoDB");
@@ -40,9 +42,14 @@ async function connectDB() {
         process.exit(1); // Exit process if connection fails
     }
 }
-connectDB();
+connectDatabase();
 
-async function sha256Hash(password){
+
+
+// hashPassword(password)
+//      generates a SHA256 hash digest from a given password,
+//      returns digest as a hexadecimal number
+async function hashPassword(password){
   const hash = crypto.createHash('sha256');
   hash.update(password);
   return hash.digest('hex');
@@ -50,26 +57,28 @@ async function sha256Hash(password){
 
 
 
-// API Route: Add User
-app.post("/verify-user", async (req, res) => {
+// API Route: verifyUser
+//      checks to see if the username and password given by a user are 
+//      present with SC-Project > SC-Project > User Credentials
+app.post("/verifyUser", async (req, res) => {
     try {
-        const mydatabase = client.db("SC-Project");
-        const mycollection = mydatabase.collection("User Credentials");
-        const { userName } = req.body;
-		const passWord  = req.body.passWord; 
+        const projectDatabase = client.db("SC-Project");
+        const userCollection = projectDatabase.collection("User Credentials");
+        const { username } = req.body;
+		const password  = req.body.password; 
 
-        if (!userName) {
+        if (!username) {
             return res.status(400).json({ error: "Username is required" });
         }
-		if (!passWord) {
+		if (!password) {
 			return res.status(400).json({ error: "Password is required" });
 		} 
 		
 		
-		const pwdHash = await sha256Hash(passWord);
-        const doc = {userName, "pwdHash":pwdHash};
+		const passwordHash = await hashPassword(password);
+        const userDocument = {username, "passwordHash":passwordHash};
 		
-        const result = await mycollection.findOne(doc);
+        const result = await userCollection.findOne(userDocument);
         if(result){
             res.json({message: "Login Successful"});
         }
@@ -83,27 +92,30 @@ app.post("/verify-user", async (req, res) => {
 });
 
 
-app.post("/add-user", async (req, res) => {
+// API Route: addUser
+//      adds the  username and password given by a user to 
+//      SC-Project > SC-Project > User Credentials
+app.post("/addUser", async (req, res) => {
     try {
-        const mydatabase = client.db("SC-Project");
-        const mycollection = mydatabase.collection("User Credentials");
-		const { userName } = req.body;
-		const passWord  = req.body.passWord; 
+        const projectDatabase = client.db("SC-Project");
+        const userCollection = projectDatabase.collection("User Credentials");
+        const { username } = req.body;
+		const password  = req.body.password; 
 
-        if (!userName) {
+        if (!username) {
             return res.status(400).json({ error: "Username is required" });
         }
-		if (!passWord) {
+		if (!password) {
 			return res.status(400).json({ error: "Password is required" });
 		} 
 		
 		
-		const pwdHash = await sha256Hash(passWord);
-        const doc = {userName, "pwdHash":pwdHash};
+		const passwordHash = await hashPassword(password);
+        const userDocument = {username, "passwordHash":passwordHash};
 
 
-        const result = await mycollection.insertOne(doc);
-		if(mycollection)
+        const result = await userCollection.insertOne(userDocument);
+		if(userCollection)
         res.json({ message: "User added", id: result.insertedId });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -117,17 +129,3 @@ app.post("/add-user", async (req, res) => {
 
 
 
-/* // API Route: Get Users
-app.get("/get-users", async (req, res) => {
-    try {
-        const mydatabase = client.db("SC-Project");
-        const mycollection = mydatabase.collection("User Credentials");
-
-        const users = await mycollection.find().toArray();
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
- */
