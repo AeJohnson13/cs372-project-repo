@@ -3,6 +3,17 @@
 // Scripts for loginPage.html
 
 
+
+// checkUsername
+//		takes a string as an input, 
+//		returns false if string doesn't fulfil the following
+//			exactly 8 characters
+//			contains at least 1 character that isn't a letter or number
+//			contains at least 1 number
+//			contains at least 1 letter
+//				will alert the user of which criteria isn't fulfilled
+//		else returns true
+//		
 function checkPassword(inputString){
 	const numberOrCharRegEx = /[a-zA-Z0-9]+/
 	const numberRegEx = /[0-9]+/
@@ -28,12 +39,16 @@ function checkPassword(inputString){
 	} 
 } 
 
-function checkUsername(inputString){
+
+// checkUsername
+// 		takes a string as an input, 
+//		returns false if not given a valid email address, also alerts user
+//		else returns true 
+//		valid email address is defined as string + "@" + string + "." + string
 	const emailRegEx =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   	if(inputString != emailRegEx.exec(inputString)){
 		alert("username must be valid email address");
 		return false;
-
 	}
 	else{
 		return true;
