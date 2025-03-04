@@ -70,21 +70,34 @@ app.post("/verifyUser", async (req, res) => {
         if (!username) {
             return res.status(400).json({ error: "Username is required" });
         }
-		if (!password) {
-			return res.status(400).json({ error: "Password is required" });
-		} 
+	if (!password) {
+		return res.status(400).json({ error: "Password is required" });
+	} 
 		
 		
-		const passwordHash = await hashPassword(password);
-        const userDocument = {username, "passwordHash":passwordHash};
+	const passwordHash = await hashPassword(password);
+
 		
-        const result = await userCollection.findOne(userDocument);
-        if(result){
-            res.json({message: "Login Successful"});
+        const user = await userCollection.findOne({ username: username });
+        if(!user){
+            res.json({ message: "Login Failed: Username not found"});
         }
-        else{
-            res.json({ message: "Login Failed"});
-        }
+	else {
+	if (user.passwordHash === passwordHash) {
+		await userCollection.updateOne({ username: username }, { $set: { failCount: 0 } });
+        	return res.json({ message: "Login Successful" });
+        } else {
+		userCollection.updateOne({ username: username }, { $inc: { failCount: 1 } });
+
+		const updatedUser = await userCollection.findOne({ username: username });
+            	if (updatedUser.failCount >= 2) {
+             		await userCollection.deleteOne({ username: username });
+             		return res.status(403).json({ message: "Account deleted." });
+            	}		
+	
+     		return res.status(401).json({ message: "Invalid password" });
+        	}
+	}
 	
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -99,7 +112,7 @@ app.post("/addUser", async (req, res) => {
     try {
         const projectDatabase = client.db("SC-Project");
         const userCollection = projectDatabase.collection("User Credentials");
-        const { username } = req.body;
+	const { username } = req.body;
 		const password  = req.body.password; 
 
         if (!username) {
@@ -111,7 +124,7 @@ app.post("/addUser", async (req, res) => {
 		
 		
 		const passwordHash = await hashPassword(password);
-        const userDocument = {username, "passwordHash":passwordHash};
+        const userDocument = {username, "passwordHash":passwordHash, failCount: 0};
 
 
         const result = await userCollection.insertOne(userDocument);
