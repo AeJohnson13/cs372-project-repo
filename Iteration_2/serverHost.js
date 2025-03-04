@@ -30,7 +30,7 @@ app.listen(port, () => {
 });
 
 
-// connectDatabse()
+// connectDatabase()
 //      Will wait until connection to database is verified, 
 //      prints error message if connections fails
 async function connectDatabase() {

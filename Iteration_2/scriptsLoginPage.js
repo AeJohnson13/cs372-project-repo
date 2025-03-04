@@ -45,6 +45,7 @@ function checkPassword(inputString){
 //		returns false if not given a valid email address, also alerts user
 //		else returns true 
 //		valid email address is defined as string + "@" + string + "." + string
+function checkUsername(inputString){
 	const emailRegEx =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   	if(inputString != emailRegEx.exec(inputString)){
 		alert("username must be valid email address");
