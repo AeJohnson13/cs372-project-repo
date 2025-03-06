@@ -1,8 +1,6 @@
 // serverHost.js
-// Alex Johnson, Enica King, Ryland Scaker
+// Alex Johnson, Enica King, Ryland Sacker
 // serverside code for cs372 Project
-
-
 
 
 const express = require('express');

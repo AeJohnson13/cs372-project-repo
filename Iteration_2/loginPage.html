@@ -1,7 +1,7 @@
 <!DocTYPE html> 
 <!--
 loginPage.html
-Alex Johnson, Ryland Scaker, Enica King
+Alex Johnson, Ryland Sacker, Enica King
 for CS372 Project 1 
 --> 
 
@@ -19,7 +19,7 @@ for CS372 Project 1
 			</h1>
 		</header> 
 
-		<form> 
+		<form, name="LoginForm", id="FormLogin>> 
 			Username <input type="text", name="usernameInputBox"  id="usernameInput"> </input>
 			<br> 
 			Password <input type="password", name="passowordInputBox", id="passwordInput"> </input> 
@@ -27,7 +27,9 @@ for CS372 Project 1
 			<button type = "button" onclick = "verifyData()", name="credentialSubmitButton", id="credentialSubmit"> 
 				Login
 			</button>
-			<!-- <button type = "button" onclick = "submitData()"> Add User </button> -->
+			 <button type = "button" onclick = "submitData()", name="AddUserButton", id="AddUser"> 
+				Add User
+			 </button>
 		</form>
 
 		<script src="scriptsLoginPage.js" type="text/javascript">  </script>
