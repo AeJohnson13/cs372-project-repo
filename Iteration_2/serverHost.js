@@ -62,46 +62,35 @@ async function hashPassword(password){
 //      present with SC-Project > SC-Project > User Credentials
 app.post("/verifyUser", async (req, res) => {
     try {
-        const projectDatabase = client.db("SC-Project");
-        const userCollection = projectDatabase.collection("User Credentials");
+        const projectDB = client.db("SC-Project");
+	const userClct = projectDB.collection("User Credentials");
         const { username } = req.body;
-		const password  = req.body.password; 
+	const password  = req.body.password; 
 
         if (!username) {
-            return res.status(400).json({ error: "Username is required" });
-        }
+		return res.status(400).json({ error: "Username is required" }); }
 	if (!password) {
-		return res.status(400).json({ error: "Password is required" });
-	} 
-		
+		return res.status(400).json({ error: "Password is required" }); }
 		
 	const passwordHash = await hashPassword(password);
 
-		
-        const user = await userCollection.findOne({ username: username });
-        if(!user){
-            res.json({ message: "Login Failed: Username not found"});
-        }
+	const user = await userClct.findOne({ username: username });
+	if(!user){
+		res.json({ message: "Login Failed: Username not found"}); }
 	else {
 	if (user.passwordHash === passwordHash) {
-		await userCollection.updateOne({ username: username }, { $set: { failCount: 0 } });
-        	return res.json({ message: "Login Successful" });
-        } else {
-		userCollection.updateOne({ username: username }, { $inc: { failCount: 1 } });
-
-		const updatedUser = await userCollection.findOne({ username: username });
-            	if (updatedUser.failCount >= 2) {
-             		await userCollection.deleteOne({ username: username });
-             		return res.status(403).json({ message: "Account deleted." });
-            	}		
+		userClct.updateOne({ username: username }, { $set: { fail: 0 } });
+        	return res.json({ message: "Login Successful" }); }
+	else {
+		userClct.updateOne({ username: username }, { $inc: { fail: 1 } });
+		const failCheck = await userClct.findOne({ username: username });
+		if (failCheck.fail >= 2) {
+			await userClct.deleteOne({ username: username });
+			return res.status(403).json({ message: "Account deleted." }); }
+		return res.status(401).json({ message: "Invalid password" }); } }
 	
-     		return res.status(401).json({ message: "Invalid password" });
-        	}
-	}
-	
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+	} catch (error) {
+		res.status(500).json({ error: error.message }); }
 });
 
 
@@ -110,13 +99,13 @@ app.post("/verifyUser", async (req, res) => {
 //      SC-Project > SC-Project > User Credentials
 app.post("/addUser", async (req, res) => {
     try {
-        const projectDatabase = client.db("SC-Project");
-        const userCollection = projectDatabase.collection("User Credentials");
+        const projectDB = client.db("SC-Project");
+	const userClct = projectDB.collection("User Credentials");
 	const { username } = req.body;
 		const password  = req.body.password; 
 
         if (!username) {
-            return res.status(400).json({ error: "Username is required" });
+		return res.status(400).json({ error: "Username is required" });
         }
 		if (!password) {
 			return res.status(400).json({ error: "Password is required" });
@@ -124,21 +113,13 @@ app.post("/addUser", async (req, res) => {
 		
 		
 		const passwordHash = await hashPassword(password);
-        const userDocument = {username, "passwordHash":passwordHash, failCount: 0};
+	const userDoc = {username, "passwordHash":passwordHash, fail: 0};
 
 
-        const result = await userCollection.insertOne(userDocument);
-		if(userCollection)
+        const result = await userClct.insertOne(userDoc);
+		if(userClct)
         res.json({ message: "User added", id: result.insertedId });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
-
-
-
-
-
-
-
-
