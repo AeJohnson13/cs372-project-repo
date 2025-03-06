@@ -91,7 +91,6 @@ async function submitData() {
 	const password = document.getElementById("passwordInput").value;
 	
 	if(checkPassword(password) && checkUsername(username)){
-		alert("test");
 		const response = await fetch("http://localhost:6543/addUser", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
