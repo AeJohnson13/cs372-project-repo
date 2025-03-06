@@ -4,7 +4,7 @@
 
 - [x] check if usernames are valid email addresses
 - [x] check if password are 8 digits and contain number, letter and special character.
-- [ ] delete account after 3 failed log attempts
+- [x] delete account after 3 failed log attempts
 
 
 
