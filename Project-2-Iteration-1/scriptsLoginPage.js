@@ -82,6 +82,7 @@ async function verifyData() {
 		const data = await response.json();
 		if(data.message == "Login Successful")
 		{
+			await fetch("http://localhost:6543/setSession")
 			window.location.href = "viewerLandingPage.html";
 		}
 
@@ -92,7 +93,7 @@ async function verifyData() {
 // submitData() 
 //		reads username and password from input object
 //		sends credentials to server, and adds them to database collection
-async function submitData() {
+async function submitData(){
 	const username = document.getElementById("usernameInput").value;
 	const password = document.getElementById("passwordInput").value;
 	

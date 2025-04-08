@@ -4,6 +4,7 @@
 
 
 const express = require('express');
+const session = require('express-session');
 const { MongoClient } = require("mongodb");
 const crypto = require('node:crypto');
 
@@ -26,6 +27,17 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
+app.use(session({
+	secret: 'your-secret-key', // this is not a secure key
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+	  maxAge: 3600000 * 24 // Session duration in milliseconds 24 hours
+	}
+  }));
+
+
 
 
 // connectDatabase()
@@ -61,31 +73,32 @@ async function hashPassword(password){
 app.post("/verifyUser", async (req, res) => {
     try {
         const projectDB = client.db("SC-Project");
-	const userClct = projectDB.collection("User Credentials");
+		const userClct = projectDB.collection("User Credentials");
         const { username } = req.body;
-	const password  = req.body.password; 
+		const password  = req.body.password; 
 
-        if (!username) {
-		return res.status(400).json({ error: "Username is required" }); }
-	if (!password) {
-		return res.status(400).json({ error: "Password is required" }); }
-		
-	const passwordHash = await hashPassword(password);
+		if (!username) {
+			return res.status(400).json({ error: "Username is required" }); }
+		if (!password) {
+			return res.status(400).json({ error: "Password is required" }); }	
+		const passwordHash = await hashPassword(password);
 
-	const user = await userClct.findOne({ username: username });
-	if(!user){
-		res.json({ message: "Login Failed: Username not found"}); }
-	else {
-	if (user.passwordHash === passwordHash) {
-		userClct.updateOne({ username: username }, { $set: { fail: 0 } });
-        	return res.json({ message: "Login Successful" }); }
-	else {
-		userClct.updateOne({ username: username }, { $inc: { fail: 1 } });
-		const failCheck = await userClct.findOne({ username: username });
-		if (failCheck.fail >= 2) {
-			await userClct.deleteOne({ username: username });
-			return res.status(403).json({ message: "Account deleted." }); }
-		return res.status(401).json({ message: "Invalid password" }); } }
+		const user = await userClct.findOne({ username: username });
+		if(!user){
+			res.json({ message: "Login Failed: Username not found"}); }
+		else {
+			if (user.passwordHash === passwordHash) {
+				userClct.updateOne({ username: username }, { $set: { fail: 0 } });
+				console.log("user logged in usersname:");
+				console.log(username);
+        		return res.json({ message: "Login Successful"}); }
+			else {
+				userClct.updateOne({ username: username }, { $inc: { fail: 1 } });
+				const failCheck = await userClct.findOne({ username: username });
+				if (failCheck.fail >= 2) {
+					await userClct.deleteOne({ username: username });
+					return res.status(403).json({ message: "Account deleted." }); }
+				return res.status(401).json({ message: "Invalid password" }); } }
 	
 	} catch (error) {
 		res.status(500).json({ error: error.message }); }
@@ -98,12 +111,12 @@ app.post("/verifyUser", async (req, res) => {
 app.post("/addUser", async (req, res) => {
     try {
         const projectDB = client.db("SC-Project");
-	const userClct = projectDB.collection("User Credentials");
-	const { username } = req.body;
+		const userClct = projectDB.collection("User Credentials");
+		const { username } = req.body;
 		const password  = req.body.password; 
 
         if (!username) {
-		return res.status(400).json({ error: "Username is required" });
+			return res.status(400).json({ error: "Username is required" });
         }
 		if (!password) {
 			return res.status(400).json({ error: "Password is required" });
@@ -111,7 +124,7 @@ app.post("/addUser", async (req, res) => {
 		
 		
 		const passwordHash = await hashPassword(password);
-	const userDoc = {username, "passwordHash":passwordHash, fail: 0};
+		const userDoc = {username, "passwordHash":passwordHash, fail: 0,"role":"Viewer"};
 
 
         const result = await userClct.insertOne(userDoc);
@@ -120,4 +133,17 @@ app.post("/addUser", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+});
+
+
+
+app.get("/setSession", (req, res) => {
+	req.session.username = "test";
+	res.send("session data set");
+
+
+})
+app.get("/getUsername", (req,res) => {
+		sessionUsername = req.session.username;
+		res.send("test");
 });

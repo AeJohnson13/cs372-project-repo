@@ -8,16 +8,33 @@ For CSF372 Project Iteration 1
 <html lang="en-us"> 
 	<head> 
 		<title> 
-			Viewr Landing Page
+			Viewer Landing Page
 		</title>
 	</head>
 
-	<body>
+	<body onload="displayData()">
 		<header>
 			<h1> 
 				Viewer Landing Page
 			</h1>
 		</header> 
+
+		<h2 id="userName">Not working</h2>
+
+
+
+		<script>
+			async function displayData(){
+				console.log("displaying data");
+				const response = await fetch("http://localhost:6543/getUsername");
+				const username = await response.json();
+				console.log(username);
+				const displayUsername = document.getElementById("userName");
+				userName.innerText = username;
+
+			}
+		</script>
+
 	</body> 
 
 
