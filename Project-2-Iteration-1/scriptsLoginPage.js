@@ -82,7 +82,7 @@ async function verifyData() {
 		const data = await response.json();
 		if(data.message == "Login Successful")
 		{
-			window.location.href = "galleryPage.html";
+			window.location.href = "viewerLandingPage.html";
 		}
 
     	alert(data.message || data.error);
