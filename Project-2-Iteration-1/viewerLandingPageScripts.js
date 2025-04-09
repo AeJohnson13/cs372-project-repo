@@ -3,7 +3,13 @@
 // Scripts for viewerLandingPage.html
 
 
-//functions that need to exist
+async function displayData(){
+    const response = await fetch("http://localhost:6543/getUsername");
+    const username = await response.text();
+    
 
+    displayUsername = document.getElementById("userName");
+    displayUsername.innerText = "Welcome user: " + username;
 
+}
 

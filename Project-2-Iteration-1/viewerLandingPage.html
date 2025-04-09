@@ -7,36 +7,25 @@ For CSF372 Project Iteration 1
 --> 
 <html lang="en-us"> 
 	<head> 
-		<title> 
-			Viewer Landing Page
-		</title>
+		<title>Viewer Gallery</title>
+		<meta charset="UTF-8"></meta>
+		<meta name="viewport" content="width=device-width,initial-scale=1"></meta>
+		<link rel="stylesheet" href="./uafBranding.css">
 	</head>
 
 	<body onload="displayData()">
-		<header>
-			<h1> 
-				Viewer Landing Page
-			</h1>
-		</header> 
+		
+	<div id="headerBar">
+			<img src="frontend_images\uaflogoBlue.png" alt="Uaf logo" class="HeaderImage"></img>
+			<img src="frontend_images\uaf-logo-text.png" alt="Uaf logo" class="HeaderImage"></img>
+			
+	</div>
+		
+
 
 		<h2 id="userName">Not working</h2>
 
-
-
-		<script>
-			async function displayData(){
-				console.log("displaying data");
-				const response = await fetch("http://localhost:6543/getUsername");
-				console.log("test");
-				const username = await response.text();
-				
-				console.log(username);
-
-				displayUsername = document.getElementById("userName");
-				displayUsername.innerText = username;
-
-			}
-		</script>
+		<script src="viewerLandingPageScripts.js" type="text/javascript"></script>
 
 	</body> 
 

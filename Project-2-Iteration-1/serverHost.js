@@ -89,8 +89,6 @@ app.post("/verifyUser", async (req, res) => {
 		else {
 			if (user.passwordHash === passwordHash) {
 				userClct.updateOne({ username: username }, { $set: { fail: 0 } });
-				console.log("user logged in usersname:");
-				console.log(username);
 				req.session.username = username;
         		return res.json({ message: "Login Successful"}); }
 			else {
