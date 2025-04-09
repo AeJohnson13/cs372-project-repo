@@ -82,7 +82,6 @@ async function verifyData() {
 		const data = await response.json();
 		if(data.message == "Login Successful")
 		{
-			await fetch("http://localhost:6543/setSession")
 			window.location.href = "viewerLandingPage.html";
 		}
 

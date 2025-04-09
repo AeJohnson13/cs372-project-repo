@@ -91,6 +91,7 @@ app.post("/verifyUser", async (req, res) => {
 				userClct.updateOne({ username: username }, { $set: { fail: 0 } });
 				console.log("user logged in usersname:");
 				console.log(username);
+				req.session.username = username;
         		return res.json({ message: "Login Successful"}); }
 			else {
 				userClct.updateOne({ username: username }, { $inc: { fail: 1 } });
@@ -137,13 +138,10 @@ app.post("/addUser", async (req, res) => {
 
 
 
-app.get("/setSession", (req, res) => {
-	req.session.username = "test";
-	res.send("session data set");
-
-
-})
+// API Route: getusername
+//		sends a string back to the client that contains 
+// 		the session username
 app.get("/getUsername", (req,res) => {
 		sessionUsername = req.session.username;
-		res.send("test");
+		res.send(sessionUsername);
 });

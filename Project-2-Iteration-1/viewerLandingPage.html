@@ -27,10 +27,13 @@ For CSF372 Project Iteration 1
 			async function displayData(){
 				console.log("displaying data");
 				const response = await fetch("http://localhost:6543/getUsername");
-				const username = await response.json();
+				console.log("test");
+				const username = await response.text();
+				
 				console.log(username);
-				const displayUsername = document.getElementById("userName");
-				userName.innerText = username;
+
+				displayUsername = document.getElementById("userName");
+				displayUsername.innerText = username;
 
 			}
 		</script>
