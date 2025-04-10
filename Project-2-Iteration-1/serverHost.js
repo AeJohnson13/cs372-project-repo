@@ -12,6 +12,7 @@ const crypto = require('node:crypto');
 const app = express();
 const port = 6543;
 const uri = "mongodb://localhost:27017";
+const videos = require('./videos.json');
 const client = new MongoClient(uri);
 
 app.use(express.json());
@@ -20,7 +21,12 @@ app.use(express.static(__dirname, { // host the whole directory
 
 // Define a route
 app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/loginPage.html')
+	res.sendFile(__dirname + '/loginPage.html');
+});
+
+// Define a route for the movies
+app.get('/videos.json', (req, res) => {
+	res.json(videos);
 });
 
 // Start the server
