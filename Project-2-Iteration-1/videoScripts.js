@@ -3,6 +3,24 @@
 // Scripts for video.html
 
 
+// likeVideo() 
+// 		adds a video like for the user profile
+//    adds the video to favourites
+(async function likeVideo() { 
+  pass
+	
+})();
+
+// dislikeVideo() 
+// 		adds a video dislike for the user profile
+(async function dislikeVideo() { 
+  pass
+	
+})();
+
+
+// loadVideo()
+//    loads video from Video Library using Youtube  
 (async function loadVideo() {
     const params = new URLSearchParams(window.location.search);
     const videoId = params.get('id');
@@ -24,4 +42,3 @@
       document.body.innerHTML = '<h2>Error loading video</h2>';
     }
   })();
-  
