@@ -9,12 +9,24 @@ For CSF372 Project 2 Iteration 1
 <head>
   <meta charset="UTF-8">
   <title>Watch Video</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"></meta>
+  <link rel="stylesheet" href="./uafBranding.css">
 </head>
-<body style="text-align:center;">
+<body>
+  <!-- Uaf header Bar-->
+	<div id="headerBar">
+    <img src="frontend_images\uaflogoBlue.png" alt="Uaf logo" class="HeaderImage"></img>
+    <img src="frontend_images\uaf-logo-text.png" alt="Uaf logo" class="HeaderImage"></img>
+</div>
+
+
+<!-- video--> 
+<div id="videoPlayer">
   <h1 id="video-title"></h1>
   <iframe id="video-frame" width="1200" height="675" frameborder="0" allowfullscreen></iframe>
   <br>
   <a href="viewerLandingPage.html">← Back to Gallery</a>
   <script src="videoScripts.js"></script>
+</div>
 </body>
 </html>
