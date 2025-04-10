@@ -1,0 +1,26 @@
+[
+    {
+      "id": "video1",
+      "title": "Beeg Beeg Yoshi",
+      "thumbnail": "/thumbnails/beeg.png",
+      "url": "bWu5X4jcvv8"
+    },
+    {
+      "id": "video2",
+      "title": "Super Donkey Kong Shake",
+      "thumbnail": "/thumbnails/dkshake.png",
+      "url": "DRnMwtdegII"
+    },
+    {
+      "id": "video3",
+      "title": "Chicken Jockey",
+      "thumbnail": "/thumbnails/steve.jpg",
+      "url": "cwuQjSJw_8U"
+    },
+    {
+      "id": "video4",
+      "title": "Stomping Koopas",
+      "thumbnail": "/thumbnails/koopa.png",
+      "url": "G4yOT604hxQ"
+    }
+]
