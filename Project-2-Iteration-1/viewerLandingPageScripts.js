@@ -11,25 +11,19 @@ fetch('videos.json')
     videos.forEach(video => {
       const link = document.createElement('a');
       link.href = `video.html?id=${video.id}`;
-      link.style.textDecoration = 'none';
+      link.className = 'video-link';
 
       const container = document.createElement('div');
-      container.style.display = 'inline-block';
-      container.style.margin = '59px';
-      container.style.textAlign = 'center';
+      container.className = 'video-container';
 
       const img = document.createElement('img');
       img.src = video.thumbnail;
       img.alt = video.title;
-      img.width = 369;
-      img.height = 208;
-      img.style.objectFit = 'cover';
+      img.className = 'video-thumb';
 
       const title = document.createElement('p');
       title.textContent = video.title;
-      title.style.marginTop = '10px';
-      title.style.fontSize = '1rem';
-      title.style.color = '#333';
+      title.className = 'video-title';
 
       container.appendChild(img);
       container.appendChild(title);

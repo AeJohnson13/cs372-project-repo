@@ -58,3 +58,27 @@ body {
   #videoPlayer {
     text-align: center;
   }
+
+
+  a.video-link {
+    text-decoration: none;
+  }
+  
+  .video-container {
+    display: inline-block;
+    margin: 59px;
+    text-align: center;
+  }
+  
+  .video-thumb {
+    width: 369px;
+    height: 208px;
+    object-fit: cover;
+  }
+  
+  .video-title {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
+  }
+  
