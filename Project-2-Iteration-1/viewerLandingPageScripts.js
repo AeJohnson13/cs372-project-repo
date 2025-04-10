@@ -17,7 +17,7 @@ fetch('/videos')
       container.className = 'video-container';
 
       const img = document.createElement('img');
-      img.src = video.thumbnail;
+      img.src = `https://img.youtube.com/vi/${video.url}/hqdefault.jpg`;
       img.alt = video.title;
       img.className = 'video-thumb';
 
