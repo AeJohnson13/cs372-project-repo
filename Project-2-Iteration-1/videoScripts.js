@@ -3,21 +3,31 @@
 // Scripts for video.html
 
 
-// likeVideo() 
-// 		adds a video like for the user profile
-//    adds the video to favourites
-(async function likeVideo() { 
-  pass
-	
-})();
+// submitPreference() 
+//    fetches user currently logged in and video ID
+// 		stores the video with status 'like' or 'dislike' for user 
+async function submitPreference(preference) {
+  try {
+    const usernameRes = await fetch('/getUsername');
+    const username = await usernameRes.text();
 
-// dislikeVideo() 
-// 		adds a video dislike for the user profile
-(async function dislikeVideo() { 
-  pass
-	
-})();
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get('id');
 
+    await fetch('/api/videoPreference', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username,
+        videoId,
+        preference
+      })
+    });
+  } catch (err) {
+    console.error('Error submitting ${preference}:', err);
+    document.body.innerHTML = '<h2>Error saving preference</h2>';
+  }
+}
 
 // loadVideo()
 //    loads video from Video Library using Youtube  
