@@ -7,7 +7,7 @@ for CS372 Project 1
 
 <html lang="en-us"> 
 	<head> 
-		<title> Login Page </title> 
+		<title> Sign Up Page </title> 
 		<meta charset="UTF-8"></meta>
 		<meta name="viewport" content="width=device-width,initial-scale=1"></meta>
 		<link rel="stylesheet" href="./uafBranding.css">
@@ -20,12 +20,12 @@ for CS372 Project 1
 		</div>
 
 
-		<div id="LoginBox" class="LoginBox"> 
+		<div id="SignUpBox" class="LoginBox"> 
 
-			<h1> Sign In </h1>
+			<h1> Sign Up </h1>
 
 			<form, name="LoginForm", id="FormLogin"> 
-				<label id="usernameLabel" class ="inputLabel">Username: </label>
+				<label id="usernameLabel" class ="inputLabel"> Username: </label>
 				<input type="text", name="usernameInputBox"  id="usernameInput"> </input>
 				<br> 
 
@@ -33,18 +33,20 @@ for CS372 Project 1
 				<input type="password", name="passowordInputBox", id="passwordInput"> </input> 
 				<br>
 
+				<label id="passwordLabel" class ="inputLabel">Verify Password:</label>
+				<input type="password", name="passwordVerfiyBox", id="passwordVerification"></input> 
+				<br>
+				
 				<div id="LoginButton">
-					<button type = "button" onclick = "verifyData()", name="credentialSubmitButton", id="credentialSubmit"> Login </button>
+					<button type = "button" onclick = "submitData()", name="AddUserButton", id="AddUser"> Add User </button>
 				</div>
-				<label id="signUpLabel">
-					Don't have an account?
-					<a href="signUpPage.html">
+				
+				<label id="loginLabel"> Already have an account?
+					<a href="loginPage.html">
 						Click Here
 					</a>  	
-					to sign up
-				</label>
-				
-				<!-- <button type = "button" onclick = "submitData()", name="AddUserButton", id="AddUser"> Add User </button> -->
+					to sign in</label>
+	
 			</form>
 		</div>
 

@@ -63,6 +63,24 @@ function checkUsername(inputString){
 } 
 
 
+// verifyPassword()
+//		takes two strings
+//		returns false if they aren't the same
+//		else returns true
+function verifyPassword(inputString1, inputString2)
+{
+	if(inputString1 != inputString2){
+		alert("passwords must be the same");
+		return false;
+	}
+	else{
+		console.log("test");
+		return true;
+	}
+}
+
+
+
 
 // verifyData() 
 // 		reads username and password from input objects
@@ -95,8 +113,8 @@ async function verifyData() {
 async function submitData(){
 	const username = document.getElementById("usernameInput").value;
 	const password = document.getElementById("passwordInput").value;
-	
-	if(checkPassword(password) && checkUsername(username)){
+	const password2 = document.getElementById("passwordVerification").value;
+	if(checkPassword(password) && checkUsername(username) && verifyPassword(password, password2) ){
 		const response = await fetch("http://localhost:6543/addUser", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
