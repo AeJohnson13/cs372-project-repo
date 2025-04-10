@@ -34,3 +34,29 @@ fetch('/videos')
   .catch(err => {
     console.error('Error loading video gallery:', err);
   });
+
+
+
+
+
+async function libararySearch()
+{
+  console.log("started doing a thing");
+  const query = document.getElementById("search").value;
+  const response = await fetch("http://localhost:6543/search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({query})
+  });
+
+  const results = await response.json();
+  console.log("recieved query");
+  const resultList = document.getElementById("list");
+  resultList.innerHTML = ""; // Clear previous entries
+
+  results.forEach(video => {
+      const li = document.createElement("li");
+      li.textContent = video.title;
+      resultList.appendChild(li);
+  });
+}

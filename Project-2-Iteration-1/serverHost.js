@@ -159,3 +159,25 @@ app.get("/getUsername", (req,res) => {
 		sessionUsername = req.session.username;
 		res.send(sessionUsername);
 });
+
+
+app.post('/search', async (req, res) => {
+	try {
+		console.log("running search function");
+		const search = req.body.query;
+		console.log("searching: "); 
+		console.log(search);
+	  	await client.connect();
+	 	const projectDB = client.db(dbName);
+		const videos = await projectDB.collection('Video Library').find({"title":{$regex:search}}).toArray();
+		console.log(videos);
+		res.json(videos);
+		} 
+		catch (err) {
+			console.error(err);
+			res.status(500).send('Error fetching videos');
+		} 
+		finally {
+			await client.close();
+		}
+});
