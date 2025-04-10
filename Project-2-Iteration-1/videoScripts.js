@@ -8,7 +8,7 @@
     const videoId = params.get('id');
   
     try {
-      const res = await fetch('videos.json');
+      const res = await fetch('/videos');
       const videos = await res.json();
       const video = videos.find(v => v.id === videoId);
   

@@ -12,8 +12,8 @@ const crypto = require('node:crypto');
 const app = express();
 const port = 6543;
 const uri = "mongodb://localhost:27017";
-const videos = require('./videos.json');
 const client = new MongoClient(uri);
+const dbName = 'SC-Project';
 
 app.use(express.json());
 app.use(express.static(__dirname, { // host the whole directory
@@ -25,8 +25,18 @@ app.get('/', (req, res) => {
 });
 
 // Define a route for the movies
-app.get('/videos.json', (req, res) => {
-	res.json(videos);
+app.get('/videos', async (req, res) => {
+	try {
+	  await client.connect();
+	  const db = client.db(dbName);
+	  const videos = await db.collection('Video Library').find().sort({ title: 1 }).toArray(); // Alphabetical
+	  res.json(videos);
+	} catch (err) {
+	  console.error(err);
+	  res.status(500).send('Error fetching videos');
+	} finally {
+	  await client.close();
+	}
 });
 
 // Start the server
@@ -78,7 +88,7 @@ async function hashPassword(password){
 //      present with SC-Project > SC-Project > User Credentials
 app.post("/verifyUser", async (req, res) => {
     try {
-        const projectDB = client.db("SC-Project");
+        const projectDB = client.db(dbName);
 		const userClct = projectDB.collection("User Credentials");
         const { username } = req.body;
 		const password  = req.body.password; 
@@ -115,7 +125,7 @@ app.post("/verifyUser", async (req, res) => {
 //      SC-Project > SC-Project > User Credentials
 app.post("/addUser", async (req, res) => {
     try {
-        const projectDB = client.db("SC-Project");
+        const projectDB = client.db(dbName);
 		const userClct = projectDB.collection("User Credentials");
 		const { username } = req.body;
 		const password  = req.body.password; 

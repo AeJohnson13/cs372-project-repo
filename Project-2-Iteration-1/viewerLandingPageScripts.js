@@ -3,7 +3,7 @@
 // Scripts for viewerLandingPage.html
 
 
-fetch('videos.json')
+fetch('/videos')
   .then(res => res.json())
   .then(videos => {
     const gallery = document.getElementById('gallery');
