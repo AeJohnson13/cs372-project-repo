@@ -42,10 +42,10 @@ async function renderGallery(favoritesOnly = false) {
   // If filter is "favorites", get user's liked videos
   if (favoritesOnly) {
     const usernameRes = await fetch('/getUsername');
-    const username = usernameRes.text();
+    const username = await usernameRes.text();
 
     const response = await fetch('/getLikedVideos', {
-      method: 'GET',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username })
     });

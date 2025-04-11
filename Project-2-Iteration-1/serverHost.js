@@ -196,9 +196,8 @@ app.post("/videoPreference", async (req, res) => {
 		await client.connect();
 		const projectDB = client.db(dbName);
 		const userClct = projectDB.collection("User Credentials");
-
 		const update = {
-			$addToSet: {}, // Adds videoID
+			$addToSet: {}, // Adds videoId
 			$pull: {}      // Removes videoId from other list
 		};
 		if (preference === 'like') {
@@ -222,23 +221,51 @@ app.post("/videoPreference", async (req, res) => {
   });
 
 
-  // getLikedVideos
-  //	filters the liked videos for a certain user
-  app.get("/getLikedVideos", async (req, res) => {
-	const username = req.body;
-	try {
-	  await client.connect();
-	  const db = client.db(dbName);
-	  const users = db.collection("User Credentials");
+// API route: getLikedVideos
+//		filters the liked videos (favourites) for a certain user
+app.post("/getLikedVideos", async (req, res) => {
+const { username } = req.body;
+try {
+	await client.connect();
+	const db = client.db(dbName);
+	const users = db.collection("User Credentials");
+	const user = await users.findOne({ username });
+	if (!user) return res.status(404).send("User not found");
+
+	const likedVideos = user.likes || [];
+	res.json(likedVideos);
+} catch (err) {
+	console.error("Error fetching liked videos:", err);
+	res.status(500).send("Server error");
+}
+});
   
-	  const user = await users.findOne({ username });
-	  if (!user) return res.status(404).send("User not found");
-  
-	  const likedVideos = user.likes || [];
-	  res.json(likedVideos);
-	} catch (err) {
-	  console.error("Error fetching liked videos:", err);
-	  res.status(500).send("Server error");
+
+// API route: getVideoPreference 
+// 		fetch a user's preference for a specific video
+app.get("/getVideoPreference", async (req, res) => {
+	const { username, videoId } = req.query;
+	if (!username || !videoId) {
+		return res.status(400).send("Missing username or videoId");
 	}
-  });
-  
+
+	try {
+		await client.connect();
+		const projectDB = client.db(dbName);
+		const userClct = projectDB.collection("User Credentials");
+		const user = await userClct.findOne({ username });
+
+		if (!user) {
+			return res.status(404).send("User not found");
+		}
+
+		let preference = null;
+		if (user.likes?.includes(videoId)) preference = "like";
+		if (user.dislikes?.includes(videoId)) preference = "dislike";
+
+		res.status(200).json({ preference });
+	} catch (err) {
+		console.error("Error fetching preference:", err);
+		res.status(500).send("Server error");
+	}
+});
