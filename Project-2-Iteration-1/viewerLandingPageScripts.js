@@ -2,44 +2,85 @@
 // Alex Johnson, Ryland Sacker, Enica King
 // Scripts for viewerLandingPage.html
 
+window.onload = () => renderGallery(false); 
 
-fetch('/videos')
-  .then(res => res.json())
-  .then(videos => {
-    const gallery = document.getElementById('gallery');
 
-    videos.forEach(video => {
-      const link = document.createElement('a');
-      link.href = `video.html?id=${video.id}`;
-      link.className = 'video-link';
+async function submitPreference(preference) {
+  console.log("submitPreference called with:", preference);
+  try {
+    const usernameRes = await fetch('/getUsername');
+    const username = usernameRes.text();
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get('id');
 
-      const container = document.createElement('div');
-      container.className = 'video-container';
-
-      const img = document.createElement('img');
-      img.src = `https://img.youtube.com/vi/${video.url}/hqdefault.jpg`;
-      img.alt = video.title;
-      img.className = 'video-thumb';
-
-      const title = document.createElement('p');
-      title.textContent = video.title;
-      title.className = 'video-title';
-
-      container.appendChild(img);
-      container.appendChild(title);
-      link.appendChild(container);
-      gallery.appendChild(link);
+    const response = await fetch('/videoPreference', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, videoId, preference })
     });
-  })
-  .catch(err => {
-    console.error('Error loading video gallery:', err);
+
+    const text = await response.text();
+    console.log("Server response:", response.status, text);
+    if (!response.ok) {
+      throw new Error(`Server error ${response.status}: ${text}`);
+    }
+
+    alert("Preference saved!");
+  } catch (err) {
+    console.error('Error submitting preference:', err);
+    document.body.innerHTML = '<h2>Error saving preference</h2>';
+  }
+}
+
+
+async function renderGallery(favoritesOnly = false) {
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = ""; // clear previous videos
+
+  let videos = await fetch('/videos').then(res => res.json());
+
+  // If filter is "favorites", get user's liked videos
+  if (favoritesOnly) {
+    const usernameRes = await fetch('/getUsername');
+    const username = usernameRes.text();
+
+    const response = await fetch('/getLikedVideos', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
+    const likedVideos = await response.json(); // array of video IDs
+    videos = videos.filter(video => likedVideos.includes(video.id));
+  }
+
+  // Render the videos
+  videos.forEach(video => {
+    const link = document.createElement('a');
+    link.href = `video.html?id=${video.id}`;
+    link.className = 'video-link';
+
+    const container = document.createElement('div');
+    container.className = 'video-container';
+    container.dataset.videoId = video.id; // for future use
+
+    const img = document.createElement('img');
+    img.src = `https://img.youtube.com/vi/${video.url}/hqdefault.jpg`;
+    img.alt = video.title;
+    img.className = 'video-thumb';
+
+    const title = document.createElement('p');
+    title.textContent = video.title;
+    title.className = 'video-title';
+
+    container.appendChild(img);
+    container.appendChild(title);
+    link.appendChild(container);
+    gallery.appendChild(link);
   });
+}
 
 
-
-
-
-async function libararySearch()
+async function librarySearch()
 {
   const query = document.getElementById("search").value;
   const response = await fetch("http://localhost:6543/search", {
@@ -69,3 +110,13 @@ async function libararySearch()
       });
     }
   }
+
+
+
+function showFavourites() {
+  renderGallery(true);
+}
+
+function showAll(){
+  renderGallery(false);
+}

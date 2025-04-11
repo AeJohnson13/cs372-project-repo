@@ -25,7 +25,7 @@ For CSF372 Project Iteration 1
 			<div id="searchMenu">
 				<div id="searchBar" class = "dropdown">
 					<form class = "form" autocomplete="off">
-						<input id="search" type="text" class="Input" placeholder="search..." oninput ="libararySearch()"/>
+						<input id="search" type="text" class="Input" placeholder="search..." oninput ="librarySearch()"/>
 					</form>
 					<div id="results-container" class="dropdown-content">
 						<ul class="results-list" id="list"></ul>
@@ -33,8 +33,12 @@ For CSF372 Project Iteration 1
 				</div>
 			</div>
 		</div>
-
-		
+		<div id="showFavouritesSection">
+			<button type = "button" onclick = "showFavourites()" name="showFavouritesButton" id="showFavourites">Show Favorites </button>
+		</div>
+		<div id="showAllSection">
+			<button type = "button" onclick = "showAll()" name="showAllButton" id="showAll">Show All </button>
+		</div>
 
 		<h1>Video Gallery</h1>
 		<div class="gallery" id="gallery"></div>

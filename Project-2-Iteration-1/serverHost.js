@@ -214,10 +214,31 @@ app.post("/videoPreference", async (req, res) => {
 			update,
 			{ upsert: true }
 		);
-		console.log(`Updating preferences.${videoId}: ${preference}`);
 		res.status(200).send('Preference saved');
 	} catch (err) {
 		console.error('DB error:', err);
 		res.status(500).send('Error saving preference');
 	}
   });
+
+
+  // getLikedVideos
+  //	filters the liked videos for a certain user
+  app.get("/getLikedVideos", async (req, res) => {
+	const username = req.body;
+	try {
+	  await client.connect();
+	  const db = client.db(dbName);
+	  const users = db.collection("User Credentials");
+  
+	  const user = await users.findOne({ username });
+	  if (!user) return res.status(404).send("User not found");
+  
+	  const likedVideos = user.likes || [];
+	  res.json(likedVideos);
+	} catch (err) {
+	  console.error("Error fetching liked videos:", err);
+	  res.status(500).send("Server error");
+	}
+  });
+  
