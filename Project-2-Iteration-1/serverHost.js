@@ -152,7 +152,7 @@ app.post("/addUser", async (req, res) => {
 
 
 
-// API Route: getusername
+// API Route: getUsername
 //		sends a string back to the client that contains 
 // 		the session username
 app.get("/getUsername", (req,res) => {
@@ -182,3 +182,34 @@ app.post('/search', async (req, res) => {
 		await client.close();
 	}
 });
+
+
+// API Route: videoPreference
+//		adds or updates User Credentials with a user preference for a video
+app.post('/api/videoPreference', async (req, res) => {
+		const { username, videoId, preference } = req.body;
+  
+	if (!username || !videoId || !['like', 'dislike'].includes(preference)) {
+	  	return res.status(400).send('Invalid request');
+	}
+  
+	try {
+		await client.connect();
+		const projectDB = client.db(dbName);
+		const userClct = projectDB.collection("User Credentials");
+  
+		await userClct.updateOne(
+			{ username: username },
+			{
+			$set: { [`preferences.${videoId}`]: preference }
+			},
+			{ upsert: true }
+		);
+  
+		res.status(200).send('Preference saved');
+	} catch (err) {
+		console.error('DB error:', err);
+		res.status(500).send('Error saving preference');
+	}
+  });
+  
