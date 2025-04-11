@@ -163,21 +163,22 @@ app.get("/getUsername", (req,res) => {
 
 app.post('/search', async (req, res) => {
 	try {
-		console.log("running search function");
 		const search = req.body.query;
-		console.log("searching: "); 
-		console.log(search);
-	  	await client.connect();
-	 	const projectDB = client.db(dbName);
-		const videos = await projectDB.collection('Video Library').find({"title":{$regex:search}}).toArray();
-		console.log(videos);
-		res.json(videos);
-		} 
-		catch (err) {
-			console.error(err);
-			res.status(500).send('Error fetching videos');
-		} 
-		finally {
-			await client.close();
+		if(search.trim().length !== 0){
+	  		await client.connect();
+	 		const projectDB = client.db(dbName);
+				const videos = await projectDB.collection('Video Library').find({"title":{$regex:search}}).toArray();
+			res.json(videos);
 		}
+		else{
+			res.json({})
+			}
+	} 
+	catch (err) {
+		console.error(err);
+		res.status(500).send('Error fetching videos');
+	} 
+	finally {
+		await client.close();
+	}
 });

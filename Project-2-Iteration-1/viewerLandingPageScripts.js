@@ -41,22 +41,31 @@ fetch('/videos')
 
 async function libararySearch()
 {
-  console.log("started doing a thing");
   const query = document.getElementById("search").value;
   const response = await fetch("http://localhost:6543/search", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({query})
   });
-
   const results = await response.json();
-  console.log("recieved query");
+  
   const resultList = document.getElementById("list");
   resultList.innerHTML = ""; // Clear previous entries
 
-  results.forEach(video => {
-      const li = document.createElement("li");
-      li.textContent = video.title;
-      resultList.appendChild(li);
-  });
-}
+  if(!results.length)
+    {
+      console.log("was empty");
+      document.getElementById("results-container").classList.remove("show");
+    }  
+  else{
+      console.log("test");
+      document.getElementById("results-container").classList.add("show");
+      results.forEach(video => {
+        const link = document.createElement("a");
+        link.href = `video.html?id=${video.id}`;
+        link.textContent = video.title;
+        link.className = 'video-link';
+        resultList.appendChild(link);
+      });
+    }
+  }
