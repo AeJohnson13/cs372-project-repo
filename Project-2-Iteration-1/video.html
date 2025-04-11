@@ -24,13 +24,16 @@ For CSF372 Project 2 Iteration 1
   <h1 id="video-title"></h1>
   <iframe id="video-frame" width="1200" height="675" frameborder="0" allowfullscreen></iframe>
   <br>
-  <!-- like button--> 
-  <div id="likeButton">
-  <button type = "button" onclick = "submitPreference('like')", name="likeButton", id="likeButton"> Me Likey </button>
-  </div>
-  <!-- dislike button--> 
-  <div id="dislikeButton">
-  <button type = "button" onclick = "submitPreference('dislike')", name="dislikeButton", id="dislikeButton"> Me No Likey </button>
+  <!-- like and dislike buttons--> 
+  <div>
+  <label>
+    <input type="radio" name="preference" value="like" id="likeButton" onchange="submitPreference(this.value)">
+    Like
+  </label>
+  <label>
+    <input type="radio" name="preference" value="dislike" id="dislikeButton" onchange="submitPreference(this.value)">
+    Dislike
+  </label>
   </div>
   <a href="viewerLandingPage.html">← Back to Gallery</a>
 </div>

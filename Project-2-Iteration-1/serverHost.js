@@ -62,6 +62,7 @@ app.use(session({
 async function connectDatabase() {
     try {
         await client.connect();
+		dbInstance = client.db('dbName');
         console.log("Connected to MongoDB");
     } catch (error) {
         console.error("MongoDB connection error:", error);
@@ -185,30 +186,37 @@ app.post('/search', async (req, res) => {
 
 // API Route: videoPreference
 //		adds or updates User Credentials with a user preference for a video
-app.post('/api/videoPreference', async (req, res) => {
-		const { username, videoId, preference } = req.body;
-  
+app.post("/videoPreference", async (req, res) => {
+	const { username, videoId, preference } = req.body;
 	if (!username || !videoId || !['like', 'dislike'].includes(preference)) {
 	  	return res.status(400).send('Invalid request');
 	}
-  
 	try {
 		await client.connect();
 		const projectDB = client.db(dbName);
 		const userClct = projectDB.collection("User Credentials");
-  
-		await userClct.updateOne(
+
+		const update = {
+			$addToSet: {}, // Adds videoID
+			$pull: {}      // Removes videoId from other list
+		};
+		if (preference === 'like') {
+			update.$addToSet.likes = videoId;
+			update.$pull.dislikes = videoId;
+		} else if (preference === 'dislike') {
+			update.$addToSet.dislikes = videoId;
+			update.$pull.likes = videoId;
+		}
+
+		const result = await userClct.updateOne(
 			{ username: username },
-			{
-			$set: { [`preferences.${videoId}`]: preference }
-			},
+			update,
 			{ upsert: true }
 		);
-  
+		console.log(`Updating preferences.${videoId}: ${preference}`);
 		res.status(200).send('Preference saved');
 	} catch (err) {
 		console.error('DB error:', err);
 		res.status(500).send('Error saving preference');
 	}
   });
-  
