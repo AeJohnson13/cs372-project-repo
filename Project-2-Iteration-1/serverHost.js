@@ -14,6 +14,8 @@ const port = 6543;
 const uri = "mongodb://localhost:27017";
 const client = new MongoClient(uri);
 const dbName = 'SC-Project';
+const dbVideoName = 'Video Library';
+const dbUsersName = 'User Credentials';
 
 app.use(express.json());
 app.use(express.static(__dirname, { // host the whole directory
@@ -27,15 +29,11 @@ app.get('/', (req, res) => {
 // Define a route for the movies
 app.get('/videos', async (req, res) => {
 	try {
-	  await client.connect();
-	  const db = client.db(dbName);
-	  const videos = await db.collection('Video Library').find().sort({ title: 1 }).toArray(); // Alphabetical
-	  res.json(videos);
+	  	const videos = await videosCollection.find().sort({ title: 1 }).toArray(); // Alphabetical
+	  	res.json(videos);
 	} catch (err) {
-	  console.error(err);
-	  res.status(500).send('Error fetching videos');
-	} finally {
-	  await client.close();
+		console.error('Error in /videos:', err);
+	  	res.status(500).send('Error fetching videos');
 	}
 });
 
@@ -51,26 +49,29 @@ app.use(session({
 	cookie: {
 	  maxAge: 3600000 * 24 // Session duration in milliseconds 24 hours
 	}
-  }));
+}));
 
 
+let db, usersCollection, videosCollection;
 
 
 // connectDatabase()
 //      Will wait until connection to database is verified, 
 //      prints error message if connections fails
 async function connectDatabase() {
-    try {
-        await client.connect();
-		dbInstance = client.db('dbName');
-        console.log("Connected to MongoDB");
-    } catch (error) {
-        console.error("MongoDB connection error:", error);
-        process.exit(1); // Exit process if connection fails
-    }
+	try {
+		await client.connect();
+		db = client.db(dbName);
+		usersCollection = db.collection(dbUsersName);
+		videosCollection = db.collection(dbVideoName);
+		console.log("Connected to MongoDB");
+	} catch (error) {
+		console.error("MongoDB connection error:", error);
+		process.exit(1); // Exit process if connection fails
+	}
 }
-connectDatabase();
 
+connectDatabase();
 
 
 // hashPassword(password)
@@ -83,14 +84,11 @@ async function hashPassword(password){
 };
 
 
-
 // API Route: verifyUser
 //      checks to see if the username and password given by a user are 
 //      present with SC-Project > SC-Project > User Credentials
 app.post("/verifyUser", async (req, res) => {
     try {
-        const projectDB = client.db(dbName);
-		const userClct = projectDB.collection("User Credentials");
         const { username } = req.body;
 		const password  = req.body.password; 
 
@@ -100,19 +98,19 @@ app.post("/verifyUser", async (req, res) => {
 			return res.status(400).json({ error: "Password is required" }); }	
 		const passwordHash = await hashPassword(password);
 
-		const user = await userClct.findOne({ username: username });
+		const user = await usersCollection.findOne({ username: username });
 		if(!user){
 			res.json({ message: "Login Failed: Username not found"}); }
 		else {
 			if (user.passwordHash === passwordHash) {
-				userClct.updateOne({ username: username }, { $set: { fail: 0 } });
+				usersCollection.updateOne({ username: username }, { $set: { fail: 0 } });
 				req.session.username = username;
         		return res.json({ message: "Login Successful"}); }
 			else {
-				userClct.updateOne({ username: username }, { $inc: { fail: 1 } });
-				const failCheck = await userClct.findOne({ username: username });
+				usersCollection.updateOne({ username: username }, { $inc: { fail: 1 } });
+				const failCheck = await usersCollection.findOne({ username: username });
 				if (failCheck.fail >= 2) {
-					await userClct.deleteOne({ username: username });
+					await usersCollection.deleteOne({ username: username });
 					return res.status(403).json({ message: "Account deleted." }); }
 				return res.status(401).json({ message: "Invalid password" }); } }
 	
@@ -126,8 +124,6 @@ app.post("/verifyUser", async (req, res) => {
 //      SC-Project > SC-Project > User Credentials
 app.post("/addUser", async (req, res) => {
     try {
-        const projectDB = client.db(dbName);
-		const userClct = projectDB.collection("User Credentials");
 		const { username } = req.body;
 		const password  = req.body.password; 
 
@@ -138,13 +134,11 @@ app.post("/addUser", async (req, res) => {
 			return res.status(400).json({ error: "Password is required" });
 		} 
 		
-		
 		const passwordHash = await hashPassword(password);
 		const userDoc = {username, "passwordHash":passwordHash, fail: 0,"role":"Viewer"};
 
-
-        const result = await userClct.insertOne(userDoc);
-		if(userClct)
+        const result = await usersCollection.insertOne(userDoc);
+		if(usersCollection)
         res.json({ message: "User added", id: result.insertedId });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -166,9 +160,7 @@ app.post('/search', async (req, res) => {
 	try {
 		const search = req.body.query;
 		if(search.trim().length !== 0){
-	  		await client.connect();
-	 		const projectDB = client.db(dbName);
-				const videos = await projectDB.collection('Video Library').find({"title":{$regex:search}}).toArray();
+			const videos = await videosCollection.find({"title":{$regex:search}}).toArray();
 			res.json(videos);
 		}
 		else{
@@ -179,40 +171,35 @@ app.post('/search', async (req, res) => {
 		console.error(err);
 		res.status(500).send('Error fetching videos');
 	} 
-	finally {
-		await client.close();
-	}
 });
 
 
 // API Route: videoPreference
 //		adds or updates User Credentials with a user preference for a video
 app.post("/videoPreference", async (req, res) => {
-	const { username, videoId, preference } = req.body;
+	const { username, videoId, preference, action } = req.body;
 	if (!username || !videoId || !['like', 'dislike'].includes(preference)) {
 	  	return res.status(400).send('Invalid request');
 	}
 	try {
-		await client.connect();
-		const projectDB = client.db(dbName);
-		const userClct = projectDB.collection("User Credentials");
-		const update = {
-			$addToSet: {}, // Adds videoId
-			$pull: {}      // Removes videoId from other list
-		};
-		if (preference === 'like') {
-			update.$addToSet.likes = videoId;
-			update.$pull.dislikes = videoId;
-		} else if (preference === 'dislike') {
-			update.$addToSet.dislikes = videoId;
-			update.$pull.likes = videoId;
+		let update;
+		if (action === 'remove') {
+			update = { $pull: { [preference + 's']: videoId } }; // pull from likes/dislikes
+		} else {
+			// Add to one and remove from the other
+			const other = preference === 'like' ? 'dislikes' : 'likes';
+			update = {
+			$addToSet: { [preference + 's']: videoId },
+			$pull: { [other]: videoId }
+			};
 		}
-
-		const result = await userClct.updateOne(
-			{ username: username },
+	
+		await usersCollection.updateOne(
+			{ username },
 			update,
 			{ upsert: true }
 		);
+	
 		res.status(200).send('Preference saved');
 	} catch (err) {
 		console.error('DB error:', err);
@@ -226,10 +213,7 @@ app.post("/videoPreference", async (req, res) => {
 app.post("/getLikedVideos", async (req, res) => {
 const { username } = req.body;
 try {
-	await client.connect();
-	const db = client.db(dbName);
-	const users = db.collection("User Credentials");
-	const user = await users.findOne({ username });
+	const user = await usersCollection.findOne({ username });
 	if (!user) return res.status(404).send("User not found");
 
 	const likedVideos = user.likes || [];
@@ -250,10 +234,7 @@ app.get("/getVideoPreference", async (req, res) => {
 	}
 
 	try {
-		await client.connect();
-		const projectDB = client.db(dbName);
-		const userClct = projectDB.collection("User Credentials");
-		const user = await userClct.findOne({ username });
+		const user = await usersCollection.findOne({ username });
 
 		if (!user) {
 			return res.status(404).send("User not found");

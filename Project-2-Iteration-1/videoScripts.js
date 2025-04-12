@@ -11,6 +11,7 @@
   
     try {
       const res = await fetch('/videos');
+      
       const videos = await res.json();
       const video = videos.find(v => v.id === videoId);
   
@@ -25,31 +26,46 @@
       console.error('Error loading video:', err);
       document.body.innerHTML = '<h2>Error loading video</h2>';
     }
-  })();
+})();
 
+
+let currentPreference = null; // Tracks the current state
 
 // submitPreference() 
+//    triggered by clicking like or dislike button
 //    fetches user currently logged in and video ID
 // 		stores the video under likes or dislikes array for user 
-async function submitPreference(preference) {
-    console.log("submitPreference called with:", preference);
+async function togglePreference(preference) {
+    const likeBtn = document.getElementById('likeButton');
+    const dislikeBtn = document.getElementById('dislikeButton');
+
     try {
       const usernameRes = await fetch('/getUsername');
       const username = await usernameRes.text();
       const params = new URLSearchParams(window.location.search);
       const videoId = params.get('id');
+      
+      let action;
+      if (currentPreference === preference) {
+        action = 'remove'; // User clicked the same radio button again — undo!
+        currentPreference = null; 
+        likeBtn.checked = false;
+        dislikeBtn.checked = false;
+      } else {
+        action = 'set';
+        currentPreference = preference;
+        likeBtn.checked = (preference === 'like');
+        dislikeBtn.checked = (preference === 'dislike');
+      }
 
       const response = await fetch('/videoPreference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, videoId, preference })
+        body: JSON.stringify({ username, videoId, preference, action })
       });
 
       const text = await response.text();
       console.log("Server response:", response.status, text);
-      if (!response.ok) {
-        throw new Error(`Server error ${response.status}: ${text}`);
-      }
 
     } catch (err) {
       console.error('Error submitting preference:', err);
@@ -83,7 +99,7 @@ async function loadUserPreference() {
 }
 
 
-// Automatically call this once the DOM is fully loaded
+// loads videos with current preference
 document.addEventListener('DOMContentLoaded', () => {
     loadUserPreference();
 });
