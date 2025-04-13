@@ -1,0 +1,52 @@
+<!DOCTYPE html> 
+<!--
+viewerLandingPage.html 
+Alex Johnson, Enica King, Ryland Sacker 
+1/24/25
+For CSF372 Project Iteration 1 
+--> 
+<html lang="en-us"> 
+	<head> 
+		<title>Viewer Gallery</title>
+		<meta charset="UTF-8"></meta>
+		<meta name="viewport" content="width=device-width,initial-scale=1"></meta>
+		<link rel="stylesheet" href="./uafBranding.css">
+	</head>
+
+
+	<body>
+		<div id="headerBar">
+			<div id="uaflogo">
+				<img src="frontend_images\uaflogoBlue.png" alt="Uaf logo" class="HeaderImage"></img>
+			</div>
+			<div id="uafTest">
+				<img src="frontend_images\uaf-logo-text.png" alt="Uaf logo" class="HeaderImage"></img>
+			</div>
+			<div id="searchMenu">
+				<div id="searchBar" class = "dropdown">
+					<form class = "form" autocomplete="off">
+						<input id="search" type="text" class="Input" placeholder="search..." oninput ="librarySearch()"/>
+					</form>
+					<div id="results-container" class="dropdown-content">
+						<ul class="results-list" id="list"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="showFavouritesSection">
+			<button type = "button" onclick = "showFavourites()" name="showFavouritesButton" id="showFavourites">Show Favorites </button>
+		</div>
+		<div id="showAllSection">
+			<button type = "button" onclick = "showAll()" name="showAllButton" id="showAll">Show All </button>
+		</div>
+
+		<h1>Video Gallery</h1>
+		<div class="gallery" id="gallery"></div>
+
+		<script src="viewerLandingPageScripts.js"></script>
+
+	</body> 
+
+
+
+</html> 

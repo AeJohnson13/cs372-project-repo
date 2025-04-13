@@ -1,0 +1,64 @@
+<!DocTYPE html> 
+<!--
+loginPage.html
+Alex Johnson, Ryland Sacker, Enica King
+for CS372 Project 1 
+--> 
+
+<html lang="en-us"> 
+	<head> 
+		<title> Sign Up Page </title> 
+		<meta charset="UTF-8"></meta>
+		<meta name="viewport" content="width=device-width,initial-scale=1"></meta>
+		<link rel="stylesheet" href="./uafBranding.css">
+	</head>
+
+	<body>
+		<div id="headerBar">
+			<img src="frontend_images\uaflogoBlue.png" alt="Uaf logo" class="HeaderImage"></img>
+			<img src="frontend_images\uaf-logo-text.png" alt="Uaf logo" class="HeaderImage"></img>	
+		</div>
+
+
+		<div id="SignUpBox" class="LoginBox"> 
+
+			<h1> Sign Up </h1>
+
+			<form, name="LoginForm", id="FormLogin"> 
+				<label id="usernameLabel" class ="inputLabel"> Username: </label>
+				<input type="text", name="usernameInputBox"  id="usernameInput"> </input>
+				<br> 
+
+				<label id="passwordLabel" class ="inputLabel">Password: </label>
+				<input type="password", name="passowordInputBox", id="passwordInput"> </input> 
+				<br>
+
+				<label id="passwordLabel" class ="inputLabel">Verify Password:</label>
+				<input type="password", name="passwordVerfiyBox", id="passwordVerification"></input> 
+				<br>
+				
+				<div id="LoginButton">
+					<button type = "button" onclick = "submitData()", name="AddUserButton", id="AddUser"> Add User </button>
+				</div>
+				
+				<label id="loginLabel"> Already have an account?
+					<a href="loginPage.html">
+						Click Here
+					</a>  	
+					to sign in</label>
+	
+			</form>
+		</div>
+
+
+
+
+
+
+
+
+		<script src="scriptsLoginPage.js" type="text/javascript">  </script>
+		
+	</body> 
+
+</html> 
