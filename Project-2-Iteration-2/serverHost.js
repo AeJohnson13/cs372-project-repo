@@ -16,6 +16,8 @@ const client = new MongoClient(uri);
 const dbName = 'SC-Project';
 const dbVideoName = 'Video Library';
 const dbUsersName = 'User Credentials';
+const roles = {"viewer":1,"markman":0,"contman":0,"admin":0};
+
 
 app.use(express.json());
 app.use(express.static(__dirname, { // host the whole directory
@@ -135,7 +137,7 @@ app.post("/addUser", async (req, res) => {
 		} 
 		
 		const passwordHash = await hashPassword(password);
-		const userDoc = {username, "passwordHash":passwordHash, fail: 0,"role":"Viewer"};
+		const userDoc = {username, "passwordHash":passwordHash, fail: 0, roles};
 
         const result = await usersCollection.insertOne(userDoc);
 		if(usersCollection)
@@ -249,4 +251,9 @@ app.get("/getVideoPreference", async (req, res) => {
 		console.error("Error fetching preference:", err);
 		res.status(500).send("Server error");
 	}
+});
+
+
+app.get("/getUserList", async (req, res) => {
+	const userList = await usersCollection.find()
 });
