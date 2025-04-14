@@ -29,7 +29,6 @@ export async function showAdminTools() {
         const li = document.createElement("li");
         li.innerHTML = `
           <strong>Username:</strong> ${user.username}<br>
-          <strong>Email:</strong> ${user.email || 'N/A'}<br>
           <strong>Roles:</strong> ${formatRoles(user.roles)}
         `;
         li.style.padding = "0.5em 0";
