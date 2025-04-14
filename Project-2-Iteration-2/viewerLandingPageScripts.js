@@ -120,3 +120,31 @@ function showFavourites() {
 function showAll(){
   renderGallery(false);
 }
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const usernameRes = await fetch('/getUsername');
+    const username = await usernameRes.text();
+
+    const response = await fetch('/getRoles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
+
+    const roles = await response.json(); // e.g., { viewer: 1, admin: 1, contman: 0 }
+
+    if (roles.admin) {
+      import('./adminPageScripts.js').then(mod => mod.showAdminTools());
+      document.getElementById("adminTools").classList.remove("hidden");
+    }
+    // add other roles eventually
+    // add to if statement what is selected in the view dropdown menu 
+    // display only for one role at a time
+
+  } catch (err) {
+    console.error("Error loading roles or modules:", err);
+  }
+});
+

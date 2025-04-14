@@ -255,5 +255,28 @@ app.get("/getVideoPreference", async (req, res) => {
 
 
 app.get("/getUserList", async (req, res) => {
-	const userList = await usersCollection.find()
+	try {
+		const userList = await usersCollection.find().toArray();
+		res.json(userList);
+	} catch (err) {
+		console.error("Error fetching user list:", err);
+		res.status(500).send("Server error");
+	}
+});
+
+
+// API route: getRoles
+// 		fetch a user's role/s 
+app.post("/getRoles", async (req, res) => {
+	const { username } = req.body;
+	try {
+		const user = await usersCollection.findOne({ username });
+		if (!user) return res.status(404).send("User not found");
+
+		const userRoles = user.roles || {};
+		res.json(userRoles);
+	} catch (err) {
+		console.error("Error fetching user roles:", err);
+		res.status(500).send("Server error");
+	}
 });
