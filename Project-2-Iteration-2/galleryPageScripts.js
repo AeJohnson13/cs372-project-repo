@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     else if(roles.contman)
     {
-      import('./contmanScripts.js').then(mod)
+      document.getElementById("contmanTools").classList.remove("hidden");
     }
     // add other roles eventually
     // add to if statement what is selected in the view dropdown menu 
@@ -152,3 +152,36 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+async function submitVideo()
+{
+  const videoTitle = document.getElementById("titleInput").value;
+  const inputUrl = document.getElementById("urlInput").value;
+
+  if(checkValidYoutubeUrl(inputUrl)){
+    alert("must give a valid youtube url");
+  }
+  else{
+    const urlValue = inputUrl.split("v=")[1].substring(0,11);
+
+    const response = await fetch("/addVideo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ videoTitle, urlValue})
+    });
+    const data = await response.json();
+    alert(data.message || data.error);
+    location.reload();
+  }
+}
+
+function checkValidYoutubeUrl(url)
+{
+  var youtubeUrlRegex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/watch\?v=([^&]+)/m;
+  if(url != youtubeUrlRegex.exec(url))
+  {
+    return false;
+  }
+  else{
+    return true;
+  }
+}

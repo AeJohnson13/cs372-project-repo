@@ -147,6 +147,31 @@ app.post("/addUser", async (req, res) => {
     }
 });
 
+app.post("/addVideo", async( req, res) =>
+{
+	try{
+		const title = req.body.videoTitle;
+		const url = req.body.urlValue;
+
+		if (!title) {
+			return res.status(400).json({ error:"Title is required" });
+        }
+		if (!url) {
+			return res.status(400).json({ error: "Url is required" });
+		} 
+
+		const videoDoc = {title, url};
+		const result = await videosCollection.insertOne(videoDoc);
+		
+		if(videosCollection){
+       		res.json({ message: "Video added", id: result.insertedId });
+		}
+   	} catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
 
 
 // API Route: getUsername

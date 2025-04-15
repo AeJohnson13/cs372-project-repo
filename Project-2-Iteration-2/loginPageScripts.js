@@ -91,7 +91,7 @@ async function verifyData() {
 	const password = document.getElementById("passwordInput").value;
 	if(checkPassword(password) && checkUsername(username))
 	{
-		const response = await fetch("http://localhost:6543/verifyUser", {
+		const response = await fetch("/verifyUser", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ username, password })
@@ -115,7 +115,7 @@ async function submitData(){
 	const password = document.getElementById("passwordInput").value;
 	const password2 = document.getElementById("passwordVerification").value;
 	if(checkPassword(password) && checkUsername(username) && verifyPassword(password, password2) ){
-		const response = await fetch("http://localhost:6543/addUser", {
+		const response = await fetch("/addUser", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ username, password })
