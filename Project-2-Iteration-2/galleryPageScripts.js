@@ -50,13 +50,13 @@ async function renderGallery(favoritesOnly = false) {
       body: JSON.stringify({ username })
     });
     const likedVideos = await response.json(); // array of video IDs
-    videos = videos.filter(video => likedVideos.includes(video.id));
+    videos = videos.filter(video => likedVideos.includes(video._id));
   }
 
   // Render the videos
   videos.forEach(video => {
     const link = document.createElement('a');
-    link.href = `video.html?id=${video.id}`;
+    link.href = `video.html?id=${video._id}`;
     link.className = 'video-link';
 
     const container = document.createElement('div');
@@ -138,6 +138,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (roles.admin) {
       import('./adminPageScripts.js').then(mod => mod.showAdminTools());
       document.getElementById("adminTools").classList.remove("hidden");
+    }
+    else if(roles.contman)
+    {
+      import('./contmanScripts.js').then(mod)
     }
     // add other roles eventually
     // add to if statement what is selected in the view dropdown menu 

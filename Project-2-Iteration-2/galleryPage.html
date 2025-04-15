@@ -16,6 +16,7 @@ For CSF372 Project Iteration 1
 
 
 	<body>
+		<!-- show for all users-->
 		<div id="headerBar">
 			<div id="uaflogo">
 				<img src="frontend_images\uaflogoBlue.png" alt="Uaf logo" class="HeaderImage"></img>
@@ -34,13 +35,15 @@ For CSF372 Project Iteration 1
 				</div>
 			</div>
 		</div>
+
+		<!-- show for all users-->
 		<div id="showFavouritesSection">
 			<button type = "button" onclick = "showFavourites()" name="showFavouritesButton" id="showFavourites">Show Favorites </button>
 		</div>
 		<div id="showAllSection">
 			<button type = "button" onclick = "showAll()" name="showAllButton" id="showAll">Show All </button>
 		</div>
-
+		<!-- show only for admin users-->
 		<div id="adminTools" class="hidden">
 			<h2>Admin Tools</h2>
 		  
@@ -50,12 +53,31 @@ For CSF372 Project Iteration 1
 			</section>
 		  
 			<!-- More admin tools can go here -->
-		  </div>
+		</div>
+		<!-- show only for content manager-->
+		<div id="contmanTools" class="hidden">
+			<h2>Add content</h2>
+
+			<div id="inputList"> 
+				<input id="title" type="text" class="Input" placeholder="search...">
+
+
+			</div>
+
+
+
+		</div>
+
+
+
+		
+
+
 
 		<h1>Video Gallery</h1>
 		<div class="gallery" id="gallery"></div>
 
-		<script src="viewerLandingPageScripts.js"></script>
+		<script src="galleryPageScripts.js"></script>
 
 	</body> 
 

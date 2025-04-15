@@ -13,7 +13,7 @@
       const res = await fetch('/videos');
       
       const videos = await res.json();
-      const video = videos.find(v => v.id === videoId);
+      const video = videos.find(v => v._id === videoId);
   
       if (!video) {
         document.body.innerHTML = '<h2>Video not found</h2>';
