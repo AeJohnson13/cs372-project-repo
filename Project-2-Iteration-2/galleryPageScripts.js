@@ -176,12 +176,6 @@ async function submitVideo()
 
 function checkValidYoutubeUrl(url)
 {
-  var youtubeUrlRegex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/watch\?v=([^&]+)/m;
-  if(url != youtubeUrlRegex.exec(url))
-  {
-    return false;
-  }
-  else{
-    return true;
-  }
+  const youtubeRegEx = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+  return !(url.match(youtubeRegEx));
 }
