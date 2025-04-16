@@ -11,3 +11,4 @@ For this project to work you must have on your laptop a connection named 'SC-Pro
 
 Users can be created using the sign-up page, by default they will only have viewer privileges, additional privilege have to be added manually by editing the 'roles' object within the user's database entry.
 
+test users can be imported from testUsers.json, password for all the accounts is 3
