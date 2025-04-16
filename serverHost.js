@@ -25,7 +25,7 @@ app.use(express.static(__dirname, { // host the whole directory
 
 // Define a route
 app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/loginPage.html');
+	res.sendFile(__dirname + '/HTML/loginPage.html');
 });
 
 // Define a route for the movies
