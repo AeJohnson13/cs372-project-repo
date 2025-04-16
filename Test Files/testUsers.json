@@ -1,0 +1,70 @@
+[{
+  "_id": {
+    "$oid": "6800049bce904afd375bb8bb"
+  },
+  "username": "admin@alaska.edu",
+  "passwordHash": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+  "fail": 0,
+  "roles": {
+    "viewer": 1,
+    "markman": 0,
+    "contman": 0,
+    "admin": 1
+  }
+},
+{
+  "_id": {
+    "$oid": "680004a1ce904afd375bb8bc"
+  },
+  "username": "contman@alaska.edu",
+  "passwordHash": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+  "fail": 0,
+  "roles": {
+    "viewer": 1,
+    "markman": 0,
+    "contman": 1,
+    "admin": 0
+  }
+},
+{
+  "_id": {
+    "$oid": "680004a9ce904afd375bb8bd"
+  },
+  "username": "viewer@alaska.edu",
+  "passwordHash": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+  "fail": 0,
+  "roles": {
+    "viewer": 1,
+    "markman": 0,
+    "contman": 0,
+    "admin": 0
+  }
+},
+{
+  "_id": {
+    "$oid": "680004b0ce904afd375bb8be"
+  },
+  "username": "markman@alaska.edu",
+  "passwordHash": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+  "fail": 0,
+  "roles": {
+    "viewer": 1,
+    "markman": 1,
+    "contman": 0,
+    "admin": 0
+  }
+},
+{
+  "_id": {
+    "$oid": "680004b9ce904afd375bb8bf"
+  },
+  "username": "everyman@alaska.edu",
+  "passwordHash": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+  "fail": 0,
+  "roles": {
+    "viewer": 1,
+    "markman": 1,
+    "contman": 1,
+    "admin": 1
+  }
+}]

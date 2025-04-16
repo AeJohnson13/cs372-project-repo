@@ -89,8 +89,6 @@ function verifyPassword(inputString1, inputString2)
 async function verifyData() { 
 	const username = document.getElementById("usernameInput").value;
 	const password = document.getElementById("passwordInput").value;
-	if(checkPassword(password) && checkUsername(username))
-	{
 		const response = await fetch("/verifyUser", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -104,7 +102,6 @@ async function verifyData() {
 		}
 
     	alert(data.message || data.error);
-	} 
 }
 
 // submitData() 
