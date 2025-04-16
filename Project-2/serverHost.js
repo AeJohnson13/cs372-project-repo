@@ -296,7 +296,9 @@ app.post("/getRoles", async (req, res) => {
 	const { username } = req.body;
 	try {
 		const user = await usersCollection.findOne({ username });
-		if (!user) return res.status(404).send("User not found");
+		if (!user) {
+			return res.status(403).json({ error: "Forbidden. You do not have access. Go log in <a href='http://localhost:6543/'>here</a>." });
+		}
 
 		const userRoles = user.roles || {};
 		res.json(userRoles);

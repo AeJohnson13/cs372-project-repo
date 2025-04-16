@@ -2,8 +2,6 @@
 // Alex Johnson, Ryland Sacker, Enica King
 // Scripts for viewerLandingPage.html
 
-window.onload = () => renderGallery(false); 
-
 
 async function submitPreference(preference) {
   console.log("submitPreference called with:", preference);
@@ -133,24 +131,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       body: JSON.stringify({ username })
     });
 
+    if (!response.ok) {
+      const err = await response.json();
+      document.body.innerHTML = `<h1 style="color: red;">${err.error}</h1>`;
+      return; 
+    }
+
     const roles = await response.json(); // e.g., { viewer: 1, admin: 1, contman: 0 }
+    console.log(roles);
 
     if (roles.admin) {
       import('./adminPageScripts.js').then(mod => mod.showAdminTools());
       document.getElementById("adminTools").classList.remove("hidden");
-    }
-    else if(roles.contman)
-    {
+    } else if (roles.markman) {
+      document.getElementById("markmanTools").classList.remove("hidden");
+    } else if(roles.contman) {
       document.getElementById("contmanTools").classList.remove("hidden");
-    }
-    // add other roles eventually
+    } 
     // add to if statement what is selected in the view dropdown menu 
-    // display only for one role at a time
 
   } catch (err) {
     console.error("Error loading roles or modules:", err);
   }
 });
+
+
+window.onload = () => renderGallery(false); 
+
 
 async function submitVideo()
 {
@@ -174,8 +181,10 @@ async function submitVideo()
   }
 }
 
+
 function checkValidYoutubeUrl(url)
 {
   const youtubeRegEx = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
   return !(url.match(youtubeRegEx));
 }
+
