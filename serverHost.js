@@ -344,7 +344,7 @@ app.post("/getRoles", async (req, res) => {
 });
 
 
-/*
+
 app.post("/getAnalytics", async (req, res) => {
 	try{
 		console.log("test");
@@ -354,4 +354,3 @@ app.post("/getAnalytics", async (req, res) => {
 		console.err("something broke");
 	}
 });
-*/
