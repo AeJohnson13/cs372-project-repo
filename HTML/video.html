@@ -37,6 +37,24 @@ For CSF372 Project 2 Iteration 1
     </label>
   </div>
   <br>
+
+  <!-- show only for content manager-->
+  <div id="contmanTools" class="hidden">
+    <div id="viewCommentBox">
+      <p id="currentComment"></p>
+      <button onclick="clearComment()">Clear Comment</button>
+    </div>
+  </div>
+
+  <!-- show only for marketing manager-->
+  <div id="markmanTools" class="hidden">
+    <div id="commentBox">
+      <textarea id="commentInput" rows="4" cols="50" placeholder="Write a comment..."></textarea><br>
+      <button onclick="submitComment()">Submit Comment</button>
+    </div>        
+  </div>
+
+
   <br>
   <a href="/HTML/galleryPage.html">← Back to Gallery</a>
 </div>

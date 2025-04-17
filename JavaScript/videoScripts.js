@@ -99,7 +99,69 @@ async function loadUserPreference() {
 }
 
 
-// loads videos with current preference
-document.addEventListener('DOMContentLoaded', () => {
+async function loadComment(videoId) {
+  try {
+    const res = await fetch(`/getComment?videoId=${videoId}`);
+    const data = await res.json();
+    document.getElementById('currentComment').textContent = data.comment || 'No comment.';
+  } catch (err) {
+    console.error('Failed to load comment:', err);
+  }
+}
+
+
+async function submitComment() {
+  const params = new URLSearchParams(window.location.search);
+  const videoId = params.get('id');
+  const commentText = document.getElementById('commentInput').value;
+
+  try {
+    const res = await fetch(`/postComment?videoId=${videoId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ comment: commentText }),
+    });
+    const data = await res.json();
+    alert('Comment submitted!');
+    loadComment(videoId);
+  } catch (err) {
+    alert('Failed to submit comment.');
+    console.error(err);
+  }
+}
+
+
+// loads comment box based on user role
+document.addEventListener('DOMContentLoaded', async () => {
     loadUserPreference();
+
+    try {
+      const usernameRes = await fetch('/getUsername');
+      const username = await usernameRes.text();
+
+      const response = await fetch('/getRoles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      });
+    
+      if (!response.ok) {
+        const err = await response.json();
+        document.body.innerHTML = `<h1 style="color: red;">${err.error}</h1>`;
+        return; 
+      }
+    
+      const roles = await response.json(); // e.g., { viewer: 1, admin: 1, contman: 0 }
+      console.log(roles);
+  
+      if (roles.markman) {
+        document.getElementById("markmanTools").classList.remove("hidden");
+      } else if(roles.contman) {
+        document.getElementById("contmanTools").classList.remove("hidden");
+      }
+      // add to if statement what is selected in the view dropdown menu 
+
+    } catch (err) {
+      console.error("Error loading roles or modules:", err);
+    }
 });

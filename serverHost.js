@@ -6,6 +6,7 @@
 const express = require('express');
 const session = require('express-session');
 const { MongoClient } = require("mongodb");
+const { ObjectId } = require("mongodb");
 const crypto = require('node:crypto');
 
 
@@ -38,6 +39,7 @@ app.get('/videos', async (req, res) => {
 	  	res.status(500).send('Error fetching videos');
 	}
 });
+
 
 // Start the server
 app.listen(port, () => {
@@ -172,6 +174,39 @@ app.post("/addVideo", async( req, res) =>
 });
 
 
+// GET: get a video's comment
+app.get('/getComment', async (req, res) => {
+	const { videoId } = req.query;
+	if (!videoId) return res.status(400).send('Missing videoId');
+
+	try {
+		const video = await videosCollection.findOne({ _id: new ObjectId(videoId) });
+		if (!video) return res.status(404).send('Video not found');
+		res.json({ comment: video.comment || '' });
+	} catch (err) {
+		console.error("Error getting comment:", err);
+		res.status(500).send("Error fetching comment");
+	}
+});
+
+
+// POST: add/update a video's comment
+app.post('/postComment', async (req, res) => {
+	const { videoId } = req.query;
+	const { comment } = req.body;
+	if (!videoId || typeof comment !== 'string') return res.status(400).send('Invalid request');
+
+	try {
+		await videosCollection.updateOne(
+			{ _id: new ObjectId(videoId) },
+			{ $set: { comment } }
+		);
+		res.json({ message: "Comment updated", comment });
+	} catch (err) {
+		console.error("Error posting comment:", err);
+		res.status(500).send("Error saving comment");
+	}
+});
 
 
 // API Route: getUsername
