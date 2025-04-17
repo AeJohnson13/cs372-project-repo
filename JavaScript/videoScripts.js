@@ -100,7 +100,10 @@ async function loadUserPreference() {
 }
 
 
-async function loadComment(videoId) {
+async function loadComment() {
+  const params = new URLSearchParams(window.location.search);
+  const videoId = params.get('id');
+
   try {
     const res = await fetch(`/getComment?videoId=${videoId}`);
     const data = await res.json();
@@ -111,10 +114,15 @@ async function loadComment(videoId) {
 }
 
 
-async function submitComment() {
+
+async function submitComment(textOverride) {
   const params = new URLSearchParams(window.location.search);
   const videoId = params.get('id');
-  const commentText = document.getElementById('commentInput').value;
+
+  // Use the override text if provided, otherwise get value from input box
+  const commentText = (typeof textOverride === 'string') 
+    ? textOverride 
+    : document.getElementById('commentInput').value;
 
   try {
     const res = await fetch(`/postComment?videoId=${videoId}`, {
@@ -122,12 +130,13 @@ async function submitComment() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ comment: commentText }),
     });
+
     const data = await res.json();
     alert('Comment submitted!');
-    loadComment(videoId);
+    await loadComment(); // refresh displayed comment
   } catch (err) {
+    console.error('Failed to submit comment:', err);
     alert('Failed to submit comment.');
-    console.error(err);
   }
 }
 
@@ -156,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log("Roles:", roles);
 
     // 👀 Show the VIEW+CLEAR comment box to both markman and contman
-    if (roles.contman) {
+    if (roles.contman || roles.markman) {
       document.getElementById("contmanTools").classList.remove("hidden");
     }
 
