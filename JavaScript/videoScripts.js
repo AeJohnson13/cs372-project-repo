@@ -22,6 +22,7 @@
   
       document.getElementById('video-title').textContent = video.title;
       document.getElementById('video-frame').src = `https://www.youtube.com/embed/${video.url}`;
+      await loadComment(video._id.$oid || video._id);
     } catch (err) {
       console.error('Error loading video:', err);
       document.body.innerHTML = '<h2>Error loading video</h2>';
@@ -131,37 +132,40 @@ async function submitComment() {
 }
 
 
-// loads comment box based on user role
 document.addEventListener('DOMContentLoaded', async () => {
-    loadUserPreference();
+  loadUserPreference();
+  await loadComment();
 
-    try {
-      const usernameRes = await fetch('/getUsername');
-      const username = await usernameRes.text();
+  try {
+    const usernameRes = await fetch('/getUsername');
+    const username = await usernameRes.text();
 
-      const response = await fetch('/getRoles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username })
-      });
-    
-      if (!response.ok) {
-        const err = await response.json();
-        document.body.innerHTML = `<h1 style="color: red;">${err.error}</h1>`;
-        return; 
-      }
-    
-      const roles = await response.json(); // e.g., { viewer: 1, admin: 1, contman: 0 }
-      console.log(roles);
-  
-      if (roles.markman) {
-        document.getElementById("markmanTools").classList.remove("hidden");
-      } else if(roles.contman) {
-        document.getElementById("contmanTools").classList.remove("hidden");
-      }
-      // add to if statement what is selected in the view dropdown menu 
+    const response = await fetch('/getRoles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
 
-    } catch (err) {
-      console.error("Error loading roles or modules:", err);
+    if (!response.ok) {
+      const err = await response.json();
+      document.body.innerHTML = `<h1 style="color: red;">${err.error}</h1>`;
+      return;
     }
+
+    const roles = await response.json();
+    console.log("Roles:", roles);
+
+    // 👀 Show the VIEW+CLEAR comment box to both markman and contman
+    if (roles.contman) {
+      document.getElementById("contmanTools").classList.remove("hidden");
+    }
+
+    // 📝 Show the COMMENT INPUT box only to contman
+    if (roles.markman) {
+      document.getElementById("markmanTools").classList.remove("hidden");
+    }
+
+  } catch (err) {
+    console.error("Error loading roles or modules:", err);
+  }
 });
