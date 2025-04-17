@@ -169,3 +169,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error("Error loading roles or modules:", err);
   }
 });
+
+/*
+async function getAnalytics()
+{
+  const analytics = await fetch('/getAnalytics');
+  console.log(analytics);
+}
+*/

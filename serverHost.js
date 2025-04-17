@@ -342,3 +342,16 @@ app.post("/getRoles", async (req, res) => {
 		res.status(500).send("Server error");
 	}
 });
+
+
+/*
+app.post("/getAnalytics", async (req, res) => {
+	try{
+		console.log("test");
+		const likeArrays = await usersCollection.find({likes});
+		console.log(likeArrays);
+	} catch (err) {
+		console.err("something broke");
+	}
+});
+*/
