@@ -143,7 +143,6 @@ async function submitComment(textOverride) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   loadUserPreference();
-  getAnalytics();
   await loadComment();
 
   try {
@@ -173,6 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 📝 Show the COMMENT INPUT box only to contman
     if (roles.markman) {
       document.getElementById("markmanTools").classList.remove("hidden");
+      displayAnalytics();
     }
 
   } catch (err) {
@@ -183,17 +183,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function getAnalytics()
 {
-  console.log("dummy");
-  /*
   const params = new URLSearchParams(window.location.search);
   const videoId = params.get('id');
-  console.log(videoId);
-
-  const analytics = await fetch('/getAnalytics', {
+  const response = await fetch('/getAnalytics', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json'},
     body: JSON.stringify({ videoId })
   });
-  console.log(analytics);
-  */
+  const analytics = await response.json();
+  return analytics;
+
+}
+
+async function displayAnalytics(){
+  videoAnalytics = await getAnalytics();
+  console.log(videoAnalytics);
+  document.getElementById("videoLikes").innerText = "Likes" + videoAnalytics.likes;
+  document.getElementById("videoDislikes").innerText = "Dislikes:" + videoAnalytics.dislikes;
 }

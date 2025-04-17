@@ -347,10 +347,13 @@ app.post("/getRoles", async (req, res) => {
 
 app.post("/getAnalytics", async (req, res) => {
 	try{
-		console.log("test");
-		const likeArrays = await usersCollection.find({likes});
-		console.log(likeArrays);
+		const videoId = req.body.videoId
+		const likeCount = await usersCollection.count({likes: videoId});
+		const dislikeCount = await usersCollection.count({dislikes:videoId});
+		const analytics = {likes: likeCount, dislikes: dislikeCount};
+		console.log(analytics);
+		res.json(analytics);
 	} catch (err) {
-		console.err("something broke");
+		console.error("something broke");
 	}
 });
