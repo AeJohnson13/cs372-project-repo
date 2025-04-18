@@ -3,12 +3,9 @@
 // Scripts for adminPage.html
 
 
-
 async function displayData() {
     const response = await fetch("/getUserList");
     const users = await response.json();
-
-
 
     usersList.innerHTML = ""; // Clear previous entries
 
@@ -17,13 +14,15 @@ async function displayData() {
     });
 }
 
+// showAdminTools
+//		displays all current users and their roles
 export async function showAdminTools() {
     try {
       const response = await fetch("/getUserList");
       const users = await response.json();
   
       const usersList = document.getElementById("usersList");
-      usersList.innerHTML = ""; // Clear any existing items
+      usersList.innerHTML = ""; // Clear existing items
   
       users.forEach(user => {
         const li = document.createElement("li");
@@ -43,6 +42,7 @@ export async function showAdminTools() {
 }
 
 
+// formatROles auxiliary function
 function formatRoles(roles) {
 if (!roles) return 'None';
 return Object.entries(roles)
