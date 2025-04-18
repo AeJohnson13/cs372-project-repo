@@ -39,7 +39,19 @@ For CSF372 Project 2 Iteration 1
   <br>
 
   <!-- show only for content manager-->
-  <div id="contmanTools" class="hidden">
+  <div id="contmanTools" class="hidden"> 
+    <div id="titleBox">
+      <textarea id="titleInput" rows="4" cols="50" placeholder="Write a new title or edit the old one ..."></textarea><br>
+      <button onclick="submitTitle()">Enter Title</button>
+    </div>    
+    <div id="genreBox">
+      <textarea id="genreInput" rows="4" cols="50" placeholder="Write or edit genre..."></textarea><br>
+      <button onclick="submitGenre()">Enter Genre</button>
+    </div>   
+  </div>
+
+  <!-- show for both content and marketing manager-->
+  <div id="managerTools" class="hidden">
     <div id="viewCommentBox">
       <p id="currentComment"></p>
       <button onclick="submitComment('')">Clear Comment</button>

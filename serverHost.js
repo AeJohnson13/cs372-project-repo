@@ -374,3 +374,40 @@ app.post("/removeVideo", async (req, res) => {
 		console.error("error: failed to delete video", err);
 	}
 });
+
+
+app.post("/submitTitle", async (req, res) => {
+	try {
+	  const { videoId, title } = req.body;
+	  const video = await videosCollection.findOne({ _id: new ObjectId(videoId) });
+  
+	  if (!video) {
+		return res.status(404).json({ message: "Video not found." });
+	  }
+  
+	  await videosCollection.updateOne({ _id: new ObjectId(videoId) }, { $set: { title } });
+  
+	  return res.status(200).json({ message: "Title updated successfully." });
+	} catch (err) {
+	  console.error("Error updating title:", err);
+	  return res.status(500).json({ message: "Server error." });
+	}
+  });
+
+  
+  app.post("/getTitle", async (req, res) => {
+	try {
+	  const { videoId } = req.body;
+	  const video = await videosCollection.findOne({ _id: new ObjectId(videoId) });
+  
+	  if (!video) {
+		return res.status(404).json({ message: "Video not found." });
+	  }
+  
+	  return res.status(200).json({ title: video.title });
+	} catch (err) {
+	  console.error("Error getting title:", err);
+	  return res.status(500).json({ message: "Server error." });
+	}
+  });
+

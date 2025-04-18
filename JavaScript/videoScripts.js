@@ -148,9 +148,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadUserPreference();
   await loadComment();
 
-  // Show the view + clear comment box to both markman and contman
+  // Show title + genre video editor only to contan
   if (currentRole === "contman" || currentRole === "markman") {
     document.getElementById("contmanTools").classList.remove("hidden");
+  }
+
+  // Show the view + clear comment box to both markman and contman
+  if (currentRole === "contman" || currentRole === "markman") {
+    document.getElementById("managerTools").classList.remove("hidden");
   }
 
   // Show the comment input box only to markman
@@ -185,3 +190,56 @@ async function displayAnalytics(){
   document.getElementById("videoLikes").innerText = "Likes" + videoAnalytics.likes;
   document.getElementById("videoDislikes").innerText = "Dislikes:" + videoAnalytics.dislikes;
 }
+
+
+async function submitTitle() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get('id');
+    const newTitle = document.getElementById('titleInput').value;
+
+    const response = await fetch('/submitTitle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ videoId, title: newTitle })
+    });
+
+    if (response.ok) {
+      // Reload the current title without reloading the entire page
+      await loadCurrentTitle();
+      alert("Title updated successfully!");
+    } else {
+      console.error("Error updating title.");
+    }
+
+  } catch (err) {
+    console.error("Error submitting title:", err);
+  }
+}
+
+
+
+async function loadCurrentTitle() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get('id');
+
+    const response = await fetch('/getTitle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ videoId })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      document.getElementById('titleInput').value = data.title || "";
+    } else {
+      console.warn("Could not load title:", data.message);
+    }
+
+  } catch (err) {
+    console.error("Error loading title:", err);
+  }
+}
+window.onload = () => {loadCurrentTitle()};
