@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadGenre();
 
   // Show title + genre video editor only to contan
-  if (currentRole === "contman" || currentRole === "markman") {
+  if (currentRole === "contman" ) {
     document.getElementById("contmanTools").classList.remove("hidden");
   }
 
@@ -164,11 +164,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (currentRole === "markman") {
     document.getElementById("markmanTools").classList.remove("hidden");
     displayAnalytics();
-  }
-
-  // SHow the genre input box only to contman
-  if (currentRole === "contman") {
-    document.getElementById("genreTools").classList.remove("hidden");
   }
   
 });
