@@ -79,7 +79,9 @@ async function renderGallery(favoritesOnly = false) {
 
     container.appendChild(img);
     container.appendChild(title);
-    container.appendChild(genre);
+    if (genre.textContent !== "") {
+      container.appendChild(genre);
+    }
     link.appendChild(container);
     gallery.appendChild(link);
   });
