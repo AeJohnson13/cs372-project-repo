@@ -31,6 +31,7 @@ async function submitPreference(preference) {
 }
 
 
+
 async function renderGallery(favoritesOnly = false) {
   const gallery = document.getElementById('gallery');
   gallery.innerHTML = ""; // clear previous videos
@@ -49,7 +50,9 @@ async function renderGallery(favoritesOnly = false) {
     });
     const likedVideos = await response.json(); // array of video IDs
     videos = videos.filter(video => likedVideos.includes(video._id));
+    isFavourites = true;
   }
+  else{ isFavourites = false };
 
   // Render the videos
   videos.forEach(video => {
@@ -75,7 +78,25 @@ async function renderGallery(favoritesOnly = false) {
     link.appendChild(container);
     gallery.appendChild(link);
   });
+
+  if (currentRole === "contman") {
+    addRemoveButtons();
+  } else {
+    // Ensure remove buttons are gone in other views
+    document.querySelectorAll('.remove-button').forEach(btn => btn.remove());
+  }
+  
 }
+
+function showFavourites() {
+  renderGallery(true);
+}
+function showAll(){
+  renderGallery(false);
+}
+
+
+window.onload = () => renderGallery(false); // why do you exist
 
 
 function toggleRoles() {
@@ -159,6 +180,8 @@ function loadViewerFeatures() {
   document.getElementById("adminTools").classList.add("hidden");
   document.getElementById("markmanTools").classList.add("hidden");
   document.getElementById("contmanTools").classList.add("hidden");
+  currentRole = "viewer";
+  renderGallery(isFavourites);
 }
 
 function loadAdminFeatures() {
@@ -166,20 +189,24 @@ function loadAdminFeatures() {
   document.getElementById("adminTools").classList.remove("hidden");
   document.getElementById("markmanTools").classList.add("hidden");
   document.getElementById("contmanTools").classList.add("hidden");
+  currentRole = "admin";
+  renderGallery(isFavourites);
 }
 
-async function loadContmanFeatures() {
+function loadContmanFeatures() {
   document.getElementById("adminTools").classList.add("hidden");
   document.getElementById("markmanTools").classList.add("hidden");
   document.getElementById("contmanTools").classList.remove("hidden");
-  await renderGallery(false);
-      addRemoveButtons();
+  currentRole = "contman";
+  renderGallery(isFavourites);
 }
 
 function loadMarkmanFeatures() {
   document.getElementById("adminTools").classList.add("hidden");
   document.getElementById("markmanTools").classList.remove("hidden");
   document.getElementById("contmanTools").classList.add("hidden");
+  currentRole = "markman";
+  renderGallery(isFavourites);
 }
 
 async function librarySearch()
@@ -211,14 +238,8 @@ async function librarySearch()
     }
   }
 
-function showFavourites() {
-  renderGallery(true);
-}
 
-function showAll(){
-  renderGallery(false);
-}
-
+let isFavourites, currentRole;
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
@@ -240,7 +261,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const roles = await response.json(); // e.g., { viewer: 1, admin: 1, contman: 0 }
     console.log(roles);
 
-    if (roles.admin) {
+    if (roles.viewer) {
+      loadViewerFeatures();
+    } else if (roles.admin) {
       loadAdminFeatures();
     } else if (roles.markman) {
       loadMarkmanFeatures();
@@ -252,9 +275,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error loading roles or modules:", err);
   }
 });
-
-
-window.onload = () => renderGallery(false); // why do you exist
 
 
 async function submitVideo()
