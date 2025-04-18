@@ -313,7 +313,9 @@ function checkInvalidYoutubeUrl(url)
 async function addRemoveButtons(){
   const elements = document.querySelectorAll('.video-link');
   elements.forEach(element => {
-    const id = element.href.split("?id=")[1];
+    console.log(element);
+    const id = element.href.split("?id=")[1].substring(0, 24);
+    console.log(id);
     var removeButton = document.createElement("button");
     removeButton.onclick = function() {
       removeVideo(id);
