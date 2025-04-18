@@ -73,8 +73,13 @@ async function renderGallery(favoritesOnly = false) {
     title.textContent = video.title;
     title.className = 'video-title';
 
+    const genre = document.createElement('q');
+    genre.textContent = video.genre ? `Genre: ${video.genre}` : '';
+    genre.className = 'video-title';
+
     container.appendChild(img);
     container.appendChild(title);
+    container.appendChild(genre);
     link.appendChild(container);
     gallery.appendChild(link);
   });
@@ -94,9 +99,6 @@ function showFavourites() {
 function showAll(){
   renderGallery(false);
 }
-
-
-window.onload = () => renderGallery(false); // why do you exist
 
 
 function toggleRoles() {

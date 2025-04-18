@@ -19,12 +19,14 @@ For CSF372 Project Iteration 1
 	<body>
 		<!-- show for all users-->
 		<div id="headerBar">
-			<div id="uaflogo">
-				<img src="/Images/uaflogoBlue.png" alt="Uaf logo" class="HeaderImage"></img>
-			</div>
-			<div id="uafTest">
-				<img src="/Images/uaf-logo-text.png" alt="Uaf logo" class="HeaderImage"></img>
-			</div>
+			<div id="logoSection">
+				<div id="uaflogo">
+				  <img src="/Images/uaflogoBlue.png" alt="Uaf logo" class="HeaderImage" />
+				</div>
+				<div id="uafTest">
+				  <img src="/Images/uaf-logo-text.png" alt="Uaf logo" class="HeaderImage" />
+				</div>
+			  </div>
 			<div id="searchMenu">
 				<div id="searchBar" class = "dropdown">
 					<form class = "form" autocomplete="off">
@@ -35,20 +37,22 @@ For CSF372 Project Iteration 1
 					</div>
 				</div>
 			</div>
-			<div id="rolesMenu" class="dropdown">
-				<button onclick="toggleRoles()" class="dropbtn" id="showRolesButton">Switch Roles</button>
-				<div id="roles-container" class="dropdown-content">
-					<ul class="results-list" id="rolesList"></ul>
+			<div id="displayMenu">
+				<div id="showFavouritesSection">
+					<button type="button" onclick="showFavourites()" id="showFavourites">Show Favorites</button>
 				</div>
-			  </div>
+				<div id="showAllSection">
+					<button type="button" onclick="showAll()" id="showAll">Show All</button>
+				</div>
+				<div id="rolesMenu" class="dropdown">
+					<button onclick="toggleRoles()" class="dropbtn" id="showRolesButton">Switch Roles</button>
+					<div id="roles-container" class="dropdown-content">
+						<ul class="results-list" id="rolesList"></ul>
+					</div>
+				</div>
+			</div>
 		</div>
-
-		<div id="showFavouritesSection">
-			<button type = "button" onclick = "showFavourites()" name="showFavouritesButton" id="showFavourites">Show Favorites </button>
-		</div>
-		<div id="showAllSection">
-			<button type = "button" onclick = "showAll()" name="showAllButton" id="showAll">Show All </button>
-		</div>
+		
 
 		<!-- show only for admin users-->
 		<div id="adminTools" class="hidden">
@@ -82,7 +86,7 @@ For CSF372 Project Iteration 1
 		</div>
 
 		<!-- show for all-->
-		<h1>Video Gallery</h1>
+		<div id="videoGalleryHeader"> <h1>Video Gallery</h1> </div>
 		<div class="gallery" id="gallery"></div>
 
 		<script src="/JavaScript/galleryPageScripts.js"></script>

@@ -9,14 +9,32 @@ body {
     background-color: #1e5c8d;
     border-style: solid white;
     display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    padding: 10px 20px;
+    flex-wrap: wrap;
     margin: auto;
+    gap: 20px;
 
     .HeaderImage { 
       padding: 10px;
       width: 120px;
+      flex: 0 0 auto;
     }
+
+    #logoSection,
+    #searchMenu,
+    #displayMenu {
+      display: flex;
+      align-items: center;
+    }
+
     #searchBar { 
       padding:30px;
+    }
+    #displayMenu {
+      margin-left: auto;
+      gap: 10px; 
     }
   }
   button {
