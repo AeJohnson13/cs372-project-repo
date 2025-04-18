@@ -245,6 +245,7 @@ async function loadCurrentTitle() {
   }
 }
 
+window.addEventListener('DOMContentLoaded', loadGenre);
 
 async function loadGenre() {
   const params = new URLSearchParams(window.location.search);
