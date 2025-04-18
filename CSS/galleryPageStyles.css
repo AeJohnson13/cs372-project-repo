@@ -1,5 +1,6 @@
   a.video-link {
     text-decoration: none;
+    
   }
   
   .video-container {
@@ -56,6 +57,9 @@
     padding:0;
   }
 
+  .remove-button{
+    z-index:7;
+  }
 
   .hidden {
     display: none;

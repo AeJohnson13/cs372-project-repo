@@ -354,6 +354,18 @@ app.post("/getAnalytics", async (req, res) => {
 		console.log(analytics);
 		res.json(analytics);
 	} catch (err) {
-		console.error("something broke");
+		console.error("failed to get analytics:", err);
+	}
+});
+
+app.post("/removeVideo", async (req, res) => {
+	try{
+		const videoId = req.body.id;
+		await videosCollection.deleteOne({ _id: new ObjectId(videoId) });
+		return res.status(200).json({ message: "Video deleted." });
+	}
+	catch(err)
+	{
+		console.error("error: failed to delete video", err);
 	}
 });

@@ -67,7 +67,7 @@ async function togglePreference(preference) {
 
       const text = await response.text();
       console.log("Server response:", response.status, text);
-
+      displayAnalytics(); // updates like dislike in real time with user input 
     } catch (err) {
       console.error('Error submitting preference:', err);
       document.body.innerHTML = '<h2>Error saving preference</h2>';
@@ -183,21 +183,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function getAnalytics()
 {
-  const params = new URLSearchParams(window.location.search);
-  const videoId = params.get('id');
-  const response = await fetch('/getAnalytics', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json'},
-    body: JSON.stringify({ videoId })
-  });
-  const analytics = await response.json();
-  return analytics;
-
+  try{
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get('id');
+    const response = await fetch('/getAnalytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({ videoId })
+    });
+    const analytics = await response.json();
+    return analytics;
+  } 
+  catch (err) {
+    console.error("error accessing like arrays:", err);
+  }
 }
 
 async function displayAnalytics(){
   videoAnalytics = await getAnalytics();
-  console.log(videoAnalytics);
   document.getElementById("videoLikes").innerText = "Likes" + videoAnalytics.likes;
   document.getElementById("videoDislikes").innerText = "Dislikes:" + videoAnalytics.dislikes;
 }

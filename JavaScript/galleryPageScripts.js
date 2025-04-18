@@ -93,11 +93,9 @@ async function librarySearch()
 
   if(!results.length)
     {
-      console.log("was empty");
       document.getElementById("results-container").classList.remove("show");
     }  
   else{
-      console.log("test");
       document.getElementById("results-container").classList.add("show");
       results.forEach(video => {
         const link = document.createElement("a");
@@ -108,8 +106,6 @@ async function librarySearch()
       });
     }
   }
-
-
 
 function showFavourites() {
   renderGallery(true);
@@ -147,6 +143,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("markmanTools").classList.remove("hidden");
     } else if(roles.contman) {
       document.getElementById("contmanTools").classList.remove("hidden");
+      await renderGallery(false);
+      addRemoveButtons();
     } 
     // add to if statement what is selected in the view dropdown menu 
 
@@ -156,7 +154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-window.onload = () => renderGallery(false); 
+window.onload = () => renderGallery(false); // why do you exist
 
 
 async function submitVideo()
@@ -188,3 +186,29 @@ function checkValidYoutubeUrl(url)
   return !(url.match(youtubeRegEx));
 }
 
+async function addRemoveButtons(){
+  const elements = document.querySelectorAll('.video-link');
+  elements.forEach(element => {
+    const id = element.href.split("?id=")[1];
+    var removeButton = document.createElement("button");
+    removeButton.onclick = function() {
+      removeVideo(id);
+    }; 
+    removeButton.className = 'remove-button';
+    element.after(removeButton);
+  });
+} 
+
+async function removeVideo(videoId) {
+  const id = String(videoId);
+  const response = await fetch("/removeVideo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({id})
+  })
+  
+  const data = await response.json();
+  alert(data.message || data.error);
+  location.reload();
+  
+}
