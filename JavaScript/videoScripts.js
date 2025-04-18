@@ -145,8 +145,10 @@ async function submitComment(textOverride) {
 
 
 document.addEventListener('DOMContentLoaded', async () => {
-  loadUserPreference();
+  await loadUserPreference();
   await loadComment();
+  await loadCurrentTitle();
+  await loadGenre();
 
   // Show title + genre video editor only to contan
   if (currentRole === "contman" || currentRole === "markman") {
@@ -164,6 +166,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     displayAnalytics();
   }
 
+  // SHow the genre input box only to contman
+  if (currentRole === "contman") {
+    document.getElementById("genreTools").classList.remove("hidden");
+  }
+  
 });
 
 
@@ -242,4 +249,38 @@ async function loadCurrentTitle() {
     console.error("Error loading title:", err);
   }
 }
-window.onload = () => {loadCurrentTitle()};
+
+
+async function loadGenre() {
+  const params = new URLSearchParams(window.location.search);
+  const videoId = params.get('id');
+
+  try {
+    const res = await fetch(`/getGenre?videoId=${videoId}`);
+    const data = await res.json();
+    document.getElementById('genreInput').value = data.genre || '';
+  } catch (err) {
+    console.error('Failed to load genre:', err);
+  }
+}
+
+async function submitGenre() {
+  const params = new URLSearchParams(window.location.search);
+  const videoId = params.get('id');
+  const genreText = document.getElementById('genreInput').value;
+
+  try {
+    const res = await fetch(`/postGenre?videoId=${videoId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ genre: genreText })
+    });
+
+    await loadGenre();
+    const data = await res.json();
+    alert('Genre submitted!');
+  } catch (err) {
+    alert('Failed to submit genre.');
+    console.error(err);
+  }
+}

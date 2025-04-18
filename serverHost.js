@@ -411,3 +411,43 @@ app.post("/submitTitle", async (req, res) => {
 	}
   });
 
+
+
+  // GET: get a video's genre
+app.get('/getGenre', async (req, res) => {
+	const { videoId } = req.query;
+	if (!videoId || !ObjectId.isValid(videoId)) {
+	  return res.status(400).send('Invalid videoId');
+	}
+  
+	try {
+	  const video = await videosCollection.findOne({ _id: new ObjectId(videoId) });
+	  if (!video) return res.status(404).send('Video not found');
+	  res.json({ genre: video.genre || '' });
+	} catch (err) {
+	  console.error("Error getting genre:", err);
+	  res.status(500).send("Error fetching genre");
+	}
+  });
+  
+  // POST: add/update genre for a video
+  app.post('/postGenre', async (req, res) => {
+	const { videoId } = req.query;
+	const { genre } = req.body;
+  
+	if (!videoId || !ObjectId.isValid(videoId) || typeof genre !== 'string') {
+	  return res.status(400).send('Invalid request');
+	}
+  
+	try {
+	  await videosCollection.updateOne(
+		{ _id: new ObjectId(videoId) },
+		{ $set: { genre } }
+	  );
+	  res.json({ message: "Genre updated", genre });
+	} catch (err) {
+	  console.error("Error posting genre:", err);
+	  res.status(500).send("Error saving genre");
+	}
+  });
+  
