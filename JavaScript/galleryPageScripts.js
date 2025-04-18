@@ -3,6 +3,8 @@
 // Scripts for viewerLandingPage.html
 
 
+// submitPreference
+//		updates a like/dislike on a video for logged in user
 async function submitPreference(preference) {
   console.log("submitPreference called with:", preference);
   try {
@@ -31,7 +33,8 @@ async function submitPreference(preference) {
 }
 
 
-
+// renderGallery
+//		loads videos based on display option
 async function renderGallery(favoritesOnly = false) {
   const gallery = document.getElementById('gallery');
   gallery.innerHTML = ""; // clear previous videos
@@ -89,12 +92,13 @@ async function renderGallery(favoritesOnly = false) {
   if (currentRole === "contman") {
     addRemoveButtons();
   } else {
-    // Ensure remove buttons are gone in other views
     document.querySelectorAll('.remove-button').forEach(btn => btn.remove());
   }
   
 }
 
+
+// displayMenu button functionality
 function showFavourites() {
   renderGallery(true);
 }
@@ -102,13 +106,12 @@ function showAll(){
   renderGallery(false);
 }
 
-
+// displayMenu switchRoles functionality
 function toggleRoles() {
   const container = document.getElementById("roles-container");
   container.classList.toggle("show");
   getRoles();
 }
-
 
 const roleDisplayNames = {
   viewer: "Viewer",
@@ -118,6 +121,8 @@ const roleDisplayNames = {
 };
 
 
+// getRoles
+//		fetches a current user's roles and displays on dropdown
 async function getRoles()
 {
   console.log("Button clicked");
@@ -131,29 +136,22 @@ async function getRoles()
   });
   const userRoles = await response.json();
   console.log(userRoles);
-
   const rolesList = document.getElementById("rolesList");
   rolesList.innerHTML = "";
 
-  if (!userRoles || Object.keys(userRoles).length === 0) {
-    rolesList.innerHTML = "<li>No roles found.</li>";
-  } else {
-    for (const [role, isActive] of Object.entries(userRoles)) {
+  for (const [role, isActive] of Object.entries(userRoles)) {
       if (isActive) {
         found = true;
         const li = document.createElement("li");
-  
-        // Create a clickable item for the role
+
         const btn = document.createElement("button");
         btn.textContent = roleDisplayNames[role] || role;
         btn.classList.add("role-button");
         btn.onclick = () => handleRoleClick(role); // Trigger function for this role
-  
         li.appendChild(btn);
         rolesList.appendChild(li);
       }
     }
-  }
 
 }
 
@@ -212,6 +210,7 @@ function loadMarkmanFeatures() {
   currentRole = "markman";
   renderGallery(isFavourites);
 }
+
 
 async function librarySearch()
 {

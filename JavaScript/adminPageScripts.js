@@ -57,8 +57,6 @@ async function displayData() {
     const response = await fetch("/getUserList");
     const users = await response.json();
 
-
-
     usersList.innerHTML = ""; // Clear previous entries
 
     users.forEach(user => {
@@ -72,7 +70,7 @@ async function showAdminTools() {
       const users = await response.json();
   
       const usersList = document.getElementById("usersList");
-      usersList.innerHTML = ""; // Clear any existing items
+      usersList.innerHTML = ""; // Clear existing items
   
       users.forEach(user => {
         const li = document.createElement("li");
@@ -92,6 +90,7 @@ async function showAdminTools() {
 }
 
 
+// formatROles auxiliary function
 function formatRoles(roles) {
 if (!roles) return 'None';
 return Object.entries(roles)
