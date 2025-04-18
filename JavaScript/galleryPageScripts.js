@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-window.onload = () => renderGallery(false); // why do you exist
+// window.onload = () => renderGallery(false); // why do you exist
 
 
 async function submitVideo()
@@ -195,6 +195,7 @@ async function addRemoveButtons(){
       removeVideo(id);
     }; 
     removeButton.className = 'remove-button';
+    removeButton.innerText = "remove video";
     element.after(removeButton);
   });
 } 
@@ -210,5 +211,4 @@ async function removeVideo(videoId) {
   const data = await response.json();
   alert(data.message || data.error);
   location.reload();
-  
 }

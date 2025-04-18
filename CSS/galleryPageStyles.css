@@ -58,7 +58,9 @@
   }
 
   .remove-button{
-    z-index:7;
+    padding: 5px 0px;
+    background-color: red;
+    min-width: 100px;
   }
 
   .hidden {
