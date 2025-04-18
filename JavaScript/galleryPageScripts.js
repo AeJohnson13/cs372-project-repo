@@ -78,6 +78,110 @@ async function renderGallery(favoritesOnly = false) {
 }
 
 
+function toggleRoles() {
+  const container = document.getElementById("roles-container");
+  container.classList.toggle("show");
+  getRoles();
+}
+
+
+const roleDisplayNames = {
+  viewer: "Viewer",
+  markman: "Marketing Manager",
+  contman: "Content Manager",
+  admin: "Administrator"
+};
+
+
+async function getRoles()
+{
+  console.log("Button clicked");
+  const usernameRes = await fetch('/getUsername');
+  const username = await usernameRes.text();
+
+  const response = await fetch('/getRoles', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username })
+  });
+  const userRoles = await response.json();
+  console.log(userRoles);
+
+  const rolesList = document.getElementById("rolesList");
+  rolesList.innerHTML = "";
+
+  if (!userRoles || Object.keys(userRoles).length === 0) {
+    rolesList.innerHTML = "<li>No roles found.</li>";
+  } else {
+    for (const [role, isActive] of Object.entries(userRoles)) {
+      if (isActive) {
+        found = true;
+        const li = document.createElement("li");
+  
+        // Create a clickable item for the role
+        const btn = document.createElement("button");
+        btn.textContent = roleDisplayNames[role] || role;
+        btn.classList.add("role-button");
+        btn.onclick = () => handleRoleClick(role); // Trigger function for this role
+  
+        li.appendChild(btn);
+        rolesList.appendChild(li);
+      }
+    }
+  }
+
+}
+
+
+function handleRoleClick(role) {
+  console.log("Selected role:", role);
+
+  switch (role) {
+    case "viewer":
+      loadViewerFeatures();
+      break;
+    case "markman":
+      loadMarkmanFeatures();
+      break;
+    case "contman":
+      loadContmanFeatures();
+      break;
+    case "admin":
+      loadAdminFeatures();
+      break;
+    default:
+      console.warn("No handler for role:", role);
+  }
+}
+
+
+function loadViewerFeatures() {
+  document.getElementById("adminTools").classList.add("hidden");
+  document.getElementById("markmanTools").classList.add("hidden");
+  document.getElementById("contmanTools").classList.add("hidden");
+}
+
+function loadAdminFeatures() {
+  import('./adminPageScripts.js').then(mod => mod.showAdminTools());
+  document.getElementById("adminTools").classList.remove("hidden");
+  document.getElementById("markmanTools").classList.add("hidden");
+  document.getElementById("contmanTools").classList.add("hidden");
+}
+
+async function loadContmanFeatures() {
+  document.getElementById("adminTools").classList.add("hidden");
+  document.getElementById("markmanTools").classList.add("hidden");
+  document.getElementById("contmanTools").classList.remove("hidden");
+  await renderGallery(false);
+      addRemoveButtons();
+}
+
+function loadMarkmanFeatures() {
+  document.getElementById("adminTools").classList.add("hidden");
+  document.getElementById("markmanTools").classList.remove("hidden");
+  document.getElementById("contmanTools").classList.add("hidden");
+}
+
 async function librarySearch()
 {
   const query = document.getElementById("search").value;
@@ -137,16 +241,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log(roles);
 
     if (roles.admin) {
-      import('./adminPageScripts.js').then(mod => mod.showAdminTools());
-      document.getElementById("adminTools").classList.remove("hidden");
+      loadAdminFeatures();
     } else if (roles.markman) {
-      document.getElementById("markmanTools").classList.remove("hidden");
+      loadMarkmanFeatures();
     } else if(roles.contman) {
-      document.getElementById("contmanTools").classList.remove("hidden");
-      await renderGallery(false);
-      addRemoveButtons();
+      loadContmanFeatures();
     } 
-    // add to if statement what is selected in the view dropdown menu 
 
   } catch (err) {
     console.error("Error loading roles or modules:", err);
@@ -154,7 +254,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-// window.onload = () => renderGallery(false); // why do you exist
+window.onload = () => renderGallery(false); // why do you exist
 
 
 async function submitVideo()
