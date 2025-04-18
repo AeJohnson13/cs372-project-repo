@@ -80,8 +80,6 @@ function verifyPassword(inputString1, inputString2)
 }
 
 
-
-
 // verifyData() 
 // 		reads username and password from input objects
 //		sends credentials to server, if login is successful sends user 
@@ -103,6 +101,7 @@ async function verifyData() {
 
     	alert(data.message || data.error);
 }
+
 
 // submitData() 
 //		reads username and password from input object

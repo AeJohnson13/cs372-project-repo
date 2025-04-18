@@ -1,6 +1,7 @@
-// viewerLandningPageScripts.js
+// galleryPageScripts.js
 // Alex Johnson, Ryland Sacker, Enica King
 // Scripts for viewerLandingPage.html
+
 
 
 // variables and constants
@@ -358,3 +359,5 @@ async function removeVideo(videoId) {
   alert(data.message || data.error);
   location.reload();
 }
+
+

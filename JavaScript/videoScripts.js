@@ -3,18 +3,19 @@
 // Scripts for video.html
 
 
+
+// variables and constants
 const urlParams = new URLSearchParams(window.location.search);
 const currentRole = urlParams.get("role");
+const videoId = urlParams.get('id');
+let currentPreference = null;
 
 
 // loadVideo()
 //    loads video from Video Library using Youtube  
 (async function loadVideo() {
-    const videoId = urlParams.get('id');
-  
     try {
       const res = await fetch('/videos');
-      
       const videos = await res.json();
       const video = videos.find(v => v._id === videoId);
   
@@ -33,8 +34,6 @@ const currentRole = urlParams.get("role");
 })();
 
 
-let currentPreference = null; // Tracks the current state
-
 // submitPreference() 
 //    triggered by clicking like or dislike button
 //    fetches user currently logged in and video ID
@@ -46,9 +45,6 @@ async function togglePreference(preference) {
     try {
       const usernameRes = await fetch('/getUsername');
       const username = await usernameRes.text();
-      const params = new URLSearchParams(window.location.search);
-      const videoId = params.get('id');
-      
       let action;
       if (currentPreference === preference) {
         action = 'remove'; // User clicked the same radio button again — undo!
@@ -84,8 +80,6 @@ async function loadUserPreference() {
   try {
     const usernameRes = await fetch('/getUsername');
     const username = await usernameRes.text();
-    const params = new URLSearchParams(window.location.search);
-    const videoId = params.get('id');
     const query = `username=${encodeURIComponent(username)}&videoId=${encodeURIComponent(videoId)}`;
     const prefRes = await fetch(`/getVideoPreference?${query}`);
     const data = await prefRes.json();
@@ -103,10 +97,9 @@ async function loadUserPreference() {
 }
 
 
+// loadComment() 
+//		show comment 
 async function loadComment() {
-  const params = new URLSearchParams(window.location.search);
-  const videoId = params.get('id');
-
   try {
     const res = await fetch(`/getComment?videoId=${videoId}`);
     const data = await res.json();
@@ -117,7 +110,8 @@ async function loadComment() {
 }
 
 
-
+// submitComment() 
+//		change comment 
 async function submitComment(textOverride) {
   const params = new URLSearchParams(window.location.search);
   const videoId = params.get('id');
@@ -144,6 +138,7 @@ async function submitComment(textOverride) {
 }
 
 
+// display based on role
 document.addEventListener('DOMContentLoaded', async () => {
   await loadUserPreference();
   await loadComment();
@@ -169,6 +164,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+// getAnalytics() 
+//		fetch total likes and dislikes 
 async function getAnalytics()
 {
   try{
@@ -187,6 +184,9 @@ async function getAnalytics()
   }
 }
 
+
+// displayAnalytics() 
+//		show total likes and dislikes 
 async function displayAnalytics(){
   videoAnalytics = await getAnalytics();
   document.getElementById("videoLikes").innerText = "Likes" + videoAnalytics.likes;
@@ -194,6 +194,8 @@ async function displayAnalytics(){
 }
 
 
+// submitTitle() 
+//		update current title 
 async function submitTitle() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -220,12 +222,10 @@ async function submitTitle() {
 }
 
 
-
+// loadCurrentTitle() 
+//		fetch current title 
 async function loadCurrentTitle() {
   try {
-    const params = new URLSearchParams(window.location.search);
-    const videoId = params.get('id');
-
     const response = await fetch('/getTitle', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -245,8 +245,10 @@ async function loadCurrentTitle() {
   }
 }
 
-window.addEventListener('DOMContentLoaded', loadGenre);
 
+// loadGenre() 
+//		fetches video genre and displays if it exists
+window.addEventListener('DOMContentLoaded', loadGenre);
 async function loadGenre() {
   const params = new URLSearchParams(window.location.search);
   const videoId = params.get('id');
@@ -260,6 +262,9 @@ async function loadGenre() {
   }
 }
 
+
+// submitGenre() 
+//		changes video genre to textbox input
 async function submitGenre() {
   const params = new URLSearchParams(window.location.search);
   const videoId = params.get('id');
@@ -280,3 +285,5 @@ async function submitGenre() {
     console.error(err);
   }
 }
+
+
