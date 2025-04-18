@@ -154,15 +154,20 @@ app.post("/addVideo", async( req, res) =>
 	try{
 		const title = req.body.videoTitle;
 		const url = req.body.urlValue;
-
+		const genre = req.body.videoGenre;
+		var videoDoc = {};
 		if (!title) {
 			return res.status(400).json({ error:"Title is required" });
         }
 		if (!url) {
 			return res.status(400).json({ error: "Url is required" });
 		} 
-
-		const videoDoc = {title, url};
+		if (!genre) {
+			videoDoc = {title, url};	
+		}
+		else{
+			videoDoc = {title, url, genre};
+		}
 		const result = await videosCollection.insertOne(videoDoc);
 		
 		if(videosCollection){

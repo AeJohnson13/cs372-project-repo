@@ -161,8 +161,8 @@ async function submitVideo()
 {
   const videoTitle = document.getElementById("titleInput").value;
   const inputUrl = document.getElementById("urlInput").value;
-
-  if(checkValidYoutubeUrl(inputUrl)){
+  const videoGenre = document.getElementById("genreInput").value;
+  if(checkInvalidYoutubeUrl(inputUrl)){
     alert("must give a valid youtube url");
   }
   else{
@@ -171,7 +171,7 @@ async function submitVideo()
     const response = await fetch("/addVideo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ videoTitle, urlValue})
+      body: JSON.stringify({ videoTitle, urlValue, videoGenre})
     });
     const data = await response.json();
     alert(data.message || data.error);
@@ -180,7 +180,7 @@ async function submitVideo()
 }
 
 
-function checkValidYoutubeUrl(url)
+function checkInvalidYoutubeUrl(url)
 {
   const youtubeRegEx = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
   return !(url.match(youtubeRegEx));
