@@ -20,8 +20,8 @@ function checkPassword(inputString){
 	const numberRegEx = /[0-9]+/
 	const lowerCharacterRegEx = /[a-z]+/
 	const upperCharacterRegEx = /[A-Z]+/
-  	if(inputString.length != 8){
-		alert("password must be 8 characters");
+  	if(inputString.length < 8){
+		alert("password must be at least 8 characters");
   		return false;
   	}
 	else if(inputString == numberOrCharRegEx.exec(inputString)){
