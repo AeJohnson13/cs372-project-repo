@@ -3,34 +3,48 @@
 // Scripts for viewerLandingPage.html
 
 
-// submitPreference
-//		updates a like/dislike on a video for logged in user
-async function submitPreference(preference) {
-  console.log("submitPreference called with:", preference);
+// variables and constants
+let isFavourites, currentRole;
+const roleDisplayNames = {
+	viewer: "Viewer",
+	markman: "Marketing Manager",
+	contman: "Content Manager",
+	admin: "Administrator"
+  };
+  
+
+// Loading a role for the user
+document.addEventListener("DOMContentLoaded", async () => {
   try {
     const usernameRes = await fetch('/getUsername');
-    const username = usernameRes.text();
-    const params = new URLSearchParams(window.location.search);
-    const videoId = params.get('id');
-
-    const response = await fetch('/videoPreference', {
+    const username = await usernameRes.text();
+    const response = await fetch('/getRoles', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, videoId, preference })
+      body: JSON.stringify({ username })
     });
 
-    const text = await response.text();
-    console.log("Server response:", response.status, text);
     if (!response.ok) {
-      throw new Error(`Server error ${response.status}: ${text}`);
+      const err = await response.json();
+      document.body.innerHTML = `<h1 style="color: red;">${err.error}</h1>`;
+      return; 
     }
 
-    alert("Preference saved!");
+    const roles = await response.json(); // e.g., { viewer: 1, admin: 1, contman: 0 }
+    console.log(roles);
+    if (roles.viewer) {
+      loadViewerFeatures();
+    } else if (roles.admin) {
+      loadAdminFeatures();
+    } else if (roles.markman) {
+      loadMarkmanFeatures();
+    } else if(roles.contman) {
+      loadContmanFeatures();
+    } 
   } catch (err) {
-    console.error('Error submitting preference:', err);
-    document.body.innerHTML = '<h2>Error saving preference</h2>';
+    console.error("Error loading roles or modules:", err);
   }
-}
+});
 
 
 // renderGallery
@@ -57,37 +71,7 @@ async function renderGallery(favoritesOnly = false) {
   }
   else{ isFavourites = false };
 
-  // Render the videos
-  videos.forEach(video => {
-    const link = document.createElement('a');
-    link.href = `video.html?id=${video._id}&role=${currentRole}`;
-    link.className = 'video-link';
-
-    const container = document.createElement('div');
-    container.className = 'video-container';
-    container.dataset.videoId = video.id; // for future use
-
-    const img = document.createElement('img');
-    img.src = `https://img.youtube.com/vi/${video.url}/hqdefault.jpg`;
-    img.alt = video.title;
-    img.className = 'video-thumb';
-
-    const title = document.createElement('p');
-    title.textContent = video.title;
-    title.className = 'video-title';
-
-    const genre = document.createElement('q');
-    genre.textContent = video.genre ? `Genre: ${video.genre}` : '';
-    genre.className = 'video-title';
-
-    container.appendChild(img);
-    container.appendChild(title);
-    if (genre.textContent !== "") {
-      container.appendChild(genre);
-    }
-    link.appendChild(container);
-    gallery.appendChild(link);
-  });
+  videoRender(videos);	// Render the videos
 
   if (currentRole === "contman") {
     addRemoveButtons();
@@ -95,6 +79,42 @@ async function renderGallery(favoritesOnly = false) {
     document.querySelectorAll('.remove-button').forEach(btn => btn.remove());
   }
   
+}
+
+
+// videoRender
+//		renders the videos
+function videoRender(videos){
+	videos.forEach(video => {
+		const link = document.createElement('a');
+		link.href = `video.html?id=${video._id}&role=${currentRole}`;
+		link.className = 'video-link';
+	
+		const container = document.createElement('div');
+		container.className = 'video-container';
+		container.dataset.videoId = video.id; // for future use
+	
+		const img = document.createElement('img');
+		img.src = `https://img.youtube.com/vi/${video.url}/hqdefault.jpg`;
+		img.alt = video.title;
+		img.className = 'video-thumb';
+	
+		const title = document.createElement('p');
+		title.textContent = video.title;
+		title.className = 'video-title';
+	
+		const genre = document.createElement('q');
+		genre.textContent = video.genre ? `Genre: ${video.genre}` : '';
+		genre.className = 'video-title';
+	
+		container.appendChild(img);
+		container.appendChild(title);
+		if (genre.textContent !== "") {
+		  container.appendChild(genre);
+		}
+		link.appendChild(container);
+		gallery.appendChild(link);
+	  });
 }
 
 
@@ -106,19 +126,13 @@ function showAll(){
   renderGallery(false);
 }
 
+
 // displayMenu switchRoles functionality
 function toggleRoles() {
   const container = document.getElementById("roles-container");
   container.classList.toggle("show");
   getRoles();
 }
-
-const roleDisplayNames = {
-  viewer: "Viewer",
-  markman: "Marketing Manager",
-  contman: "Content Manager",
-  admin: "Administrator"
-};
 
 
 // getRoles
@@ -147,15 +161,16 @@ async function getRoles()
         const btn = document.createElement("button");
         btn.textContent = roleDisplayNames[role] || role;
         btn.classList.add("role-button");
-        btn.onclick = () => handleRoleClick(role); // Trigger function for this role
+        btn.onclick = () => handleRoleClick(role); // switch to this role
         li.appendChild(btn);
         rolesList.appendChild(li);
       }
     }
-
 }
 
 
+// handleRoleClick
+// 		Switch roles and load role features
 function handleRoleClick(role) {
   console.log("Selected role:", role);
 
@@ -177,6 +192,8 @@ function handleRoleClick(role) {
   }
 }
 
+
+// Functions to load corresponding role features and update view
 
 function loadViewerFeatures() {
   document.getElementById("adminTools").classList.add("hidden");
@@ -212,6 +229,38 @@ function loadMarkmanFeatures() {
 }
 
 
+// submitPreference
+//		updates a like/dislike on a video for logged in user
+async function submitPreference(preference) {
+  console.log("submitPreference called with:", preference);
+  try {
+    const usernameRes = await fetch('/getUsername');
+    const username = usernameRes.text();
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get('id');
+
+    const response = await fetch('/videoPreference', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, videoId, preference })
+    });
+
+    const text = await response.text();
+    console.log("Server response:", response.status, text);
+    if (!response.ok) {
+      throw new Error(`Server error ${response.status}: ${text}`);
+    }
+
+    alert("Preference saved!");
+  } catch (err) {
+    console.error('Error submitting preference:', err);
+    document.body.innerHTML = '<h2>Error saving preference</h2>';
+  }
+}
+
+
+// librarySearch
+//		searches within video database for inputted title
 async function librarySearch()
 {
   const query = document.getElementById("search").value;
@@ -239,47 +288,11 @@ async function librarySearch()
         resultList.appendChild(link);
       });
     }
-  }
+}
 
 
-let isFavourites, currentRole;
-
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const usernameRes = await fetch('/getUsername');
-    const username = await usernameRes.text();
-
-    const response = await fetch('/getRoles', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username })
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      document.body.innerHTML = `<h1 style="color: red;">${err.error}</h1>`;
-      return; 
-    }
-
-    const roles = await response.json(); // e.g., { viewer: 1, admin: 1, contman: 0 }
-    console.log(roles);
-
-    if (roles.viewer) {
-      loadViewerFeatures();
-    } else if (roles.admin) {
-      loadAdminFeatures();
-    } else if (roles.markman) {
-      loadMarkmanFeatures();
-    } else if(roles.contman) {
-      loadContmanFeatures();
-    } 
-
-  } catch (err) {
-    console.error("Error loading roles or modules:", err);
-  }
-});
-
-
+// submitVideo
+//		adds a video to Video Library
 async function submitVideo()
 {
   const videoTitle = document.getElementById("titleInput").value;
@@ -303,12 +316,17 @@ async function submitVideo()
 }
 
 
+// checkInvalidYoutubeUrl
+//		uses RegEx to validate URL for submitVideo
 function checkInvalidYoutubeUrl(url)
 {
   const youtubeRegEx = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
   return !(url.match(youtubeRegEx));
 }
 
+
+// addRemoveButtons
+//		makes videos removable for Content Manager
 async function addRemoveButtons(){
   const elements = document.querySelectorAll('.video-link');
   elements.forEach(element => {
@@ -325,6 +343,9 @@ async function addRemoveButtons(){
   });
 } 
 
+
+// removeVideo
+//		removes a video from Video Library
 async function removeVideo(videoId) {
   const id = String(videoId);
   const response = await fetch("/removeVideo", {
