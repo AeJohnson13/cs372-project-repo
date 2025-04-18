@@ -57,7 +57,7 @@ async function renderGallery(favoritesOnly = false) {
   // Render the videos
   videos.forEach(video => {
     const link = document.createElement('a');
-    link.href = `video.html?id=${video._id}`;
+    link.href = `video.html?id=${video._id}&role=${currentRole}`;
     link.className = 'video-link';
 
     const container = document.createElement('div');
@@ -230,7 +230,7 @@ async function librarySearch()
       document.getElementById("results-container").classList.add("show");
       results.forEach(video => {
         const link = document.createElement("a");
-        link.href = `video.html?id=${video.id}`;
+        link.href = `video.html?id=${video._id}&role=${currentRole}`;
         link.textContent = video.title;
         link.className = 'video-link';
         resultList.appendChild(link);

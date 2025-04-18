@@ -3,11 +3,14 @@
 // Scripts for video.html
 
 
+const urlParams = new URLSearchParams(window.location.search);
+const currentRole = urlParams.get("role");
+
+
 // loadVideo()
 //    loads video from Video Library using Youtube  
 (async function loadVideo() {
-    const params = new URLSearchParams(window.location.search);
-    const videoId = params.get('id');
+    const videoId = urlParams.get('id');
   
     try {
       const res = await fetch('/videos');
@@ -145,39 +148,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadUserPreference();
   await loadComment();
 
-  try {
-    const usernameRes = await fetch('/getUsername');
-    const username = await usernameRes.text();
-
-    const response = await fetch('/getRoles', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username })
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      document.body.innerHTML = `<h1 style="color: red;">${err.error}</h1>`;
-      return;
-    }
-
-    const roles = await response.json();
-    console.log("Roles:", roles);
-
-    // 👀 Show the VIEW+CLEAR comment box to both markman and contman
-    if (roles.contman || roles.markman) {
-      document.getElementById("contmanTools").classList.remove("hidden");
-    }
-
-    // 📝 Show the COMMENT INPUT box only to contman
-    if (roles.markman) {
-      document.getElementById("markmanTools").classList.remove("hidden");
-      displayAnalytics();
-    }
-
-  } catch (err) {
-    console.error("Error loading roles or modules:", err);
+  // Show the view + clear comment box to both markman and contman
+  if (currentRole === "contman" || currentRole === "markman") {
+    document.getElementById("contmanTools").classList.remove("hidden");
   }
+
+  // Show the comment input box only to markman
+  if (currentRole === "markman") {
+    document.getElementById("markmanTools").classList.remove("hidden");
+    displayAnalytics();
+  }
+
 });
 
 
