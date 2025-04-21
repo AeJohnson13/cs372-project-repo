@@ -205,7 +205,7 @@ function loadViewerFeatures() {
 }
 
 function loadAdminFeatures() {
-  import('./adminPageScripts.js').then(mod => mod.showAdminTools());
+  import('/Javascript/adminPageScripts.js').then(showAdminTools());
   document.getElementById("adminTools").classList.remove("hidden");
   document.getElementById("markmanTools").classList.add("hidden");
   document.getElementById("contmanTools").classList.add("hidden");

@@ -9,7 +9,6 @@ async function displayData() {
     const users = await response.json();
 
 
-
     usersList.innerHTML = ""; // Clear previous entries
 
     users.forEach(user => {
@@ -51,6 +50,3 @@ return Object.entries(roles)
     .join(', ') || 'None';
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  addButton();
-});
