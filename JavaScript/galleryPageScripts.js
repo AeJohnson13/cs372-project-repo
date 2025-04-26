@@ -104,15 +104,23 @@ function videoRender(videos){
 		title.textContent = video.title;
 		title.className = 'video-title';
 	
-		const genre = document.createElement('q');
+		const genre = document.createElement('p');
 		genre.textContent = video.genre ? `Genre: ${video.genre}` : '';
 		genre.className = 'video-title';
 	
+    const comment = document.createElement('p');
+		comment.textContent = video.comment ? `Comment: ${video.comment}` : '';
+		comment.className = 'video-title';
+
 		container.appendChild(img);
 		container.appendChild(title);
 		if (genre.textContent !== "") {
 		  container.appendChild(genre);
 		}
+    if (currentRole === "contman" && comment.textContent !== "") {
+		  container.appendChild(comment);
+		}
+
 		link.appendChild(container);
 		gallery.appendChild(link);
 	  });
