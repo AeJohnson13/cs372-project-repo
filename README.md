@@ -42,8 +42,9 @@ After software prerequistes are installed, other instilation steps are as follow
     - d. Go to `User Credentials` and click the Add Data button, click import JSON and import `Test Files\testUsers.json`, this will set up an initial video catalog
     - e. *Optional* While 
   * Step 4: While connected to the database run `node serverhost.js` in the root directory, if successful you should see the following output: 
-  - > Server running at http://localhost:6543
-  - > Connected to MongoDB
+
+``Server running at http://localhost:6543``  
+``Connected to MongoDB``
 
 
 ## MongoDB Setup
