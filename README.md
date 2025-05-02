@@ -40,12 +40,10 @@ After software prerequistes are installed, other instilation steps are as follow
     - b. Add a new database also named `SC-Project`
     - c. Add two new collections titled `User Credentials` and `Video Library`
     - d. Go to `User Credentials` and click the Add Data button, click import JSON and import `Test Files\testUsers.json`, this will set up an initial video catalog
-    - e. *Optional* While 
   * Step 4: While connected to the database run `node serverhost.js` in the root directory, if successful you should see the following output: 
 
 ``Server running at http://localhost:6543``  
 ``Connected to MongoDB``
-
 ## Functionality
 
 ### Login Page
@@ -55,7 +53,7 @@ The login page give the user the ability to login by entering valid credentials 
 ---
 ### Sign Up Page
 ![Signup Page](<Images/Signup Page Screenshot.png>)
-The Sign Up Page allows the user to create a new viewer account by inputting a valid username and two identical passwords the hitting `Add User`, and gives you the option to hit the `Click Here` button to return to the Login page to sign in to their new account
+The Sign Up Page allows the user to create a new viewer account by inputting a valid username and two identical passwords the hitting `Add User`, and gives you the option to hit the `Click Here` button to return to the Login page to sign in to their new account. Additional roles must be added to the viewer account by system admin. 
 
 ---
 ### Gallery Pages
